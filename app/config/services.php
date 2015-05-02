@@ -80,7 +80,16 @@ $di->set('session', function () {
 
     return $session;
 });
-
+/*
+$di->set('dispatcher', function () use ($di) {
+    $eventsManager = $di->getShared('eventsManager');
+    $security = new Security();
+    $eventsManager->attach('dispatch', $security);
+    $dispatcher = new Phalcon\Mvc\Dispatcher();
+    $dispatcher->setEventsManager($eventsManager);
+    return $dispatcher;
+});
+*/
 $di->set('modelsManager', function () {
     $manager = new Manager;
     return $manager;
@@ -162,4 +171,9 @@ $di->setShared('translate', function() use($di) {
     return new Phalcon\Translate\Adapter\NativeArray(array(
         "content" => $messages
     ));
+});
+
+$di->set('router', function() use ($config){
+    return require __DIR__.'/../../app/config/routes.php';
+
 });
