@@ -4,7 +4,7 @@
 
   <ul class="nav navbar-nav">
     <li> <?php echo $this->tag->linkTo(array("index", "home page")) ?> </li>
-    <li> <?php echo $this->tag->linkTo(array("apartment", "apartments")) ?> </li>
+    <li> <?php echo $this->tag->linkTo(array("apartment/list", "list")) ?> </li>
   </ul>
   </div><!-- /.container-fluid -->
 </nav>

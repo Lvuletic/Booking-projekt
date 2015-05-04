@@ -4,11 +4,10 @@
 
 $(document).ready(function() {
     $('#myCarousel').carousel({
-        interval: 5000
-    })
+        interval: 0
+    });
 
     $('#myCarousel').on('slid.bs.carousel', function() {
         //alert("slid");
     });
 });
-

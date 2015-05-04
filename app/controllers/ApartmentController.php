@@ -8,9 +8,9 @@
 
 class ApartmentController extends ControllerBase
 {
-    public function indexAction()
+    public function indexAction($code)
     {
-        $apartment = Apartment::findFirst(103);
+        $apartment = Apartment::findFirst($code);
         $this->view->apartmentCode = $apartment->getCode();
         $this->view->size = $apartment->getSize();
         if ($apartment->getInternetAccess()==1)
@@ -28,19 +28,15 @@ class ApartmentController extends ControllerBase
             $this->view->availability = "Yes";
         } else $this->view->availability = "No";
 
-        $reservation = new Reservation();
-        $reservation = $reservation->findByCustomer(1000);
-        foreach ($reservation as $item)
-        {
-            $startDate = new DateTime($item->getStartDate());
-            $endDate = new DateTime($item->getEndDate());
-            $interval = new DateInterval("P1D");
-            $dateRange = new DatePeriod($startDate, $interval, $endDate);
+        $this->view->form = new ReservationForm();
 
+    }
 
-        }
+    public function listAction()
+    {
+        $list = Apartment::find();
+        $this->view->list = $list;
 
-        $this->view->datedate = $dateRange;
     }
 
 }

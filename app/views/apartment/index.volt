@@ -1,5 +1,5 @@
 
-<div class="col-md-8">
+<div class="col-md-12">
 <div id="myCarousel" class="carousel slide" data-ride="carousel">
 
   <div class="carousel-inner" role="listbox">
@@ -26,23 +26,9 @@
     <span class="sr-only">Next</span>
   </a>
 </div>
-</div>
 
-<div class="col-md-4">
-<h3> FEATURE LIST </h3>
-<p>
-Apartment number: {{ apartmentCode}} <br>
-Size: {{ size }} <br>
-Internet access: {{ internet }} <br>
-Air-conditioning: {{ airconditioning }} <br>
-Bedrooms: {{ bedrooms }} <br>
-Bathrooms: {{ bathrooms }} <br>
-Availability: {{ availability }} <br>
-<a class="btn btn-primary" href="reservation">Book this apartment</a>
-</p>
-</div>
 
-<div class="col-md-4">
+
 <div id="mySlider" class="carousel slide">
 <div class="carousel-inner">
 <div class="item active">
@@ -75,3 +61,60 @@ Availability: {{ availability }} <br>
 </div>
 </div>
 
+<div class="col-md-8">
+<p>
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam convallis sapien at commodo auctor.
+Proin nec mauris nisl. Duis ut lectus id diam vestibulum porttitor at commodo diam. Nam a pharetra tellus.
+Sed vel lacus quis sapien venenatis mollis ut ac odio. Donec condimentum enim vitae dapibus fringilla.
+Sed aliquet suscipit ex, nec accumsan lectus blandit et. Ut velit purus, ullamcorper sodales hendrerit sed, laoreet sit amet enim.
+Cras id tempor dolor, sed cursus elit. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
+Proin volutpat sapien non sem porta faucibus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
+Nullam felis risus, tincidunt in posuere fringilla, auctor eget ipsum.
+
+</p>
+</div>
+
+<div class="col-md-4">
+<h3> FEATURE LIST </h3>
+<p>
+<div id="apartmentCode">Apartment number: {{ apartmentCode }}</div> <br>
+Size: {{ size }} <br>
+Internet access: {{ internet }} <br>
+Air-conditioning: {{ airconditioning }} <br>
+Bedrooms: {{ bedrooms }} <br>
+Bathrooms: {{ bathrooms }} <br>
+Availability: {{ availability }} <br>
+{% if availability=="Yes" %}
+All dates are possible for reservation
+{% else %}
+<button type="button" class="btn btn-info" onclick="checkDates()">Check available dates</button>
+{% endif %}
+
+</div>
+
+<div class="col-md-6">
+{{ form("reservation/index/"~apartmentCode, "role": "form") }}
+
+<div class="form-group">
+{{ form.label("checkin") }}
+{{ form.render("checkin", ["class": "form-control", "placeholder": "Check-in date"]) }}
+</div>
+
+<div class="form-group">
+{{ form.label("checkout") }}
+{{ form.render("checkout", ["class": "form-control", "placeholder": "Check-out date"]) }}
+</div>
+
+<div class="form-group">
+{{ form.label("people") }}
+{{ form.render("people", ["class": "form-control", "placeholder": "Number of guests"]) }}
+</div>
+
+<div class="form-group">
+{{ submit_button("value": "Book this apartment", "class": "btn btn-primary") }}
+</div>
+</div>
+
+<div id="dateCheck">
+
+</div>

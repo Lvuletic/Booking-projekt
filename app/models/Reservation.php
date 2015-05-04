@@ -154,10 +154,10 @@ class Reservation extends \Phalcon\Mvc\Model
     public function columnMap()
     {
         return array(
-            'start_date' => 'start_date', 
-            'end_date' => 'end_date', 
-            'people' => 'people', 
-            'apartment_code' => 'apartment_code', 
+            'start_date' => 'start_date',
+            'end_date' => 'end_date',
+            'people' => 'people',
+            'apartment_code' => 'apartment_code',
             'customer_code' => 'customer_code'
         );
     }
@@ -166,6 +166,16 @@ class Reservation extends \Phalcon\Mvc\Model
     {
         $items = Reservation::find("customer_code = '$code'");
         return $items;
+    }
+
+    public function createNew($reservation, $checkin, $checkout, $people, $apartmentCode, $customerCode)
+    {
+        $reservation->setStartDate($checkin);
+        $reservation->setEndDate($checkout);
+        $reservation->setPeople($people);
+        $reservation->setApartmentCode($apartmentCode);
+        $reservation->setCustomerCode($customerCode);
+        return $reservation;
     }
 
 }
