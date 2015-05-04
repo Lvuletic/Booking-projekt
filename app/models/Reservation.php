@@ -178,4 +178,15 @@ class Reservation extends \Phalcon\Mvc\Model
         return $reservation;
     }
 
+    public function testNew()
+    {
+        $reservation = new Reservation();
+        $reservation->setStartDate("1999-01-01");
+        $reservation->setEndDate("1999-02-01");
+        $reservation->setPeople(3);
+        $reservation->setApartmentCode(100);
+        $reservation->setCustomerCode(1000);
+        return $reservation->save();
+    }
+
 }

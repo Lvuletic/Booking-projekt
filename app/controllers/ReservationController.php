@@ -83,4 +83,15 @@ class ReservationController extends ControllerBase
         }
     }
 
+    public function test($startDate, $endDate)
+    {
+        $reservation = Reservation::findFirst();
+        $checkin = $reservation->getStartDate();
+        $checkout = $reservation->getEndDate();
+        if (($checkin<$startDate && $checkout<=$startDate) || ($checkin>=$endDate && $checkout>$endDate))
+        {
+            return true;
+        } else return false;
+    }
+
 }

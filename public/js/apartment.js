@@ -2,13 +2,6 @@
  * Created by Luka on 30/04/15.
  */
 
-
-$(function() {
-    $("#reserveDate").datepicker({
-        dateFormat: "yy-mm-dd"
-    }).val()
-});
-
 $(function() {
     $( "#checkin").datepicker({
         dateFormat: "yy-mm-dd"
@@ -21,34 +14,14 @@ $(function() {
     }).val()
 });
 
-$(function() {
-    $("#availability").datepicker();
-});
-
-
-var $dp = $("<input type='text' />").hide().datepicker().appendTo('body');
-
-$("#reservationDate").button().click(function(e) {
-    if ($dp.datepicker('widget').is(':hidden')) {
-        $dp.show().datepicker('show').hide();
-        $dp.datepicker("widget").position({
-            my: "left top",
-            at: "right top",
-            of: this
-        });
-    } else {
-        $dp.hide();
-    }
-
-    //e.preventDefault();
-});
 
 function checkDates()
 {
     var checkin = $("#checkin").val();
     var checkout = $("#checkout").val();
-    var code = $("#apartmentCode").text();
-    var realCode = code.slice(-3);
+    var code = $("#apartmentInfo").text();
+    var realCode = code.slice(18,21);
+    console.log(realCode);
     $.ajax({
         url: "/booking/reservation/check",
         type: "post",

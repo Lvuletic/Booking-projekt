@@ -76,8 +76,7 @@ Nullam felis risus, tincidunt in posuere fringilla, auctor eget ipsum.
 
 <div class="col-md-4">
 <h3> FEATURE LIST </h3>
-<p>
-<div id="apartmentCode">Apartment number: {{ apartmentCode }}</div> <br>
+<p id="apartmentInfo">Apartment number: {{ apartmentCode }} <br>
 Size: {{ size }} <br>
 Internet access: {{ internet }} <br>
 Air-conditioning: {{ airconditioning }} <br>
@@ -89,7 +88,10 @@ All dates are possible for reservation
 {% else %}
 <button type="button" class="btn btn-info" onclick="checkDates()">Check available dates</button>
 {% endif %}
+</p>
+<div id="dateCheck">
 
+</div>
 </div>
 
 <div class="col-md-6">
@@ -115,6 +117,9 @@ All dates are possible for reservation
 </div>
 </div>
 
-<div id="dateCheck">
-
+<div>
+Price for 2 people or more per day: {{ priceRoom }} <br>
+Price for one person per day: {{ pricePerson }}
 </div>
+
+

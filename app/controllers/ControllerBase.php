@@ -11,6 +11,7 @@ class ControllerBase extends Controller
             ->addJs("js/jquery-ui.min.js")
             ->addJs("js/carousel.js")
             ->addJs("js/apartment.js")
+            ->addJs("js/admin.js")
             ->addJs("js/bootstrap.js");
         $this->assets
             ->addCss("css/jquery-ui.min.css")
