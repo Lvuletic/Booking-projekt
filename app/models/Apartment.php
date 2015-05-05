@@ -13,12 +13,6 @@ class Apartment extends \Phalcon\Mvc\Model
      *
      * @var double
      */
-    protected $price;
-
-    /**
-     *
-     * @var double
-     */
     protected $size;
 
     /**
@@ -60,19 +54,6 @@ class Apartment extends \Phalcon\Mvc\Model
     public function setCode($code)
     {
         $this->code = $code;
-
-        return $this;
-    }
-
-    /**
-     * Method to set the value of field price
-     *
-     * @param double $price
-     * @return $this
-     */
-    public function setPrice($price)
-    {
-        $this->price = $price;
 
         return $this;
     }
@@ -166,16 +147,6 @@ class Apartment extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field price
-     *
-     * @return double
-     */
-    public function getPrice()
-    {
-        return $this->price;
-    }
-
-    /**
      * Returns the value of field size
      *
      * @return double
@@ -242,7 +213,6 @@ class Apartment extends \Phalcon\Mvc\Model
     {
         return array(
             'code' => 'code', 
-            'price' => 'price', 
             'size' => 'size', 
             'internet_access' => 'internet_access', 
             'availability' => 'availability', 

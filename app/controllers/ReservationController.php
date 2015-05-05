@@ -9,38 +9,33 @@
 class ReservationController extends ControllerBase
 {
     public function indexAction($code)
-    {/*
-        $reservation = new Reservation();
-        $reservation = $reservation->findByCustomer(1000);
-        foreach ($reservation as $item)
-        {
-            $startDate = new DateTime($item->getStartDate());
-            $endDate = new DateTime($item->getEndDate());
-            $interval = new DateInterval("P1D");
-            $dateRange = new DatePeriod($startDate, $interval, $endDate);
-
-
-        }
-
-        $this->view->datedate = $dateRange;
-*/
+    {
         if ($this->request->isPost() == true)
         {
             $people = $this->request->getPost("people");
             $checkin = $this->request->getPost("checkin");
             $checkout = $this->request->getPost("checkout");
             $reservation = new Reservation();
-            $reservation = $reservation->createNew($reservation, $checkin, $checkout, $people, $code, 1002);
-            if ($reservation->save() == false)
+            $available = $reservation->checkDates($code, $checkin, $checkout);
+            if ($available == true)
             {
-                foreach ($reservation->getMessages() as $message) {
-                    $this->flash->notice($message);
+                $totalPrice = $reservation->calculatePrice($checkin, $checkout, $code, $people);
+                $reservation = $reservation->createNew($reservation, $checkin, $checkout, $people, $totalPrice, $code, 1001);
+                if ($reservation->save() == false)
+                {
+                    foreach ($reservation->getMessages() as $message) {
+                        $this->flash->notice($message);
+                        return $this->dispatcher->forward(array("controller" => "apartment", "action" => "index", "param" => $code));
+                    }
+                } else {
+                    $this->flash->success("Reservation successful");
                     return $this->dispatcher->forward(array("controller" => "apartment", "action" => "index", "param" => $code));
                 }
             } else {
-                $this->flash->success("Reservation successful");
+                $this->flashSession->error("The chosen period is not available for reservation, please choose another one");
                 return $this->dispatcher->forward(array("controller" => "apartment", "action" => "index", "param" => $code));
             }
+
         }
     }
 
@@ -49,36 +44,13 @@ class ReservationController extends ControllerBase
         if ($this->request->isAjax() == true)
         {
             $response = new \Phalcon\Http\Response();
-            $reservation = Reservation::find();
-            /*$dates = [];
-            foreach ($reservation as $booking)
-            {
-                $dates[] = [
-                    "start" => $booking->getStartDate(),
-                    "end" => $booking->getEndDate()
-                ];
-            }*/
-            $dates = $reservation->toArray();
-            /*foreach ($reservation as $booking)
-            {
-                $startDate = $booking->getStartDate();
-                $endDate = $booking->getEndDate();
-                if (($checkin<$startDate && $checkout<=$startDate)==false && ($checkin>=$endDate && $checkout>$endDate)==false)
-                {
-                    $content="nije dobro";
-                    $response->setContent($content);
-
-
-                } else {
-                    $content="dobro je";
-                    $response->setContent($content);
-
-
-                }
-            }*/
-            $response->setContent(json_encode($dates));
+            $reservation = new Reservation();
+            $code = $this->request->getPost("code");
+            $checkin = $this->request->getPost("startDate");
+            $checkout = $this->request->getPost("endDate");
+            $availability = $reservation->checkDates($code, $checkin, $checkout);
+            $response->setContent($availability);
             return $response;
-
         }
     }
 
@@ -90,8 +62,9 @@ class ReservationController extends ControllerBase
             $startDate = $this->request->getPost("startDate");
             $endDate = $this->request->getPost("endDate");
             $people = $this->request->getPost("people");
+            $code = $this->request->getPost("code");
             $reservation = new Reservation();
-            $totalPrice = $reservation->calculatePrice($startDate, $endDate, $people);
+            $totalPrice = $reservation->calculatePrice($startDate, $endDate, $code, $people);
             $response->setContent($totalPrice);
             return $response;
         }

@@ -182,17 +182,43 @@ class Reservation extends \Phalcon\Mvc\Model
         return $items;
     }
 
-    public function createNew($reservation, $checkin, $checkout, $people, $apartmentCode, $customerCode)
+    public function createNew($reservation, $checkin, $checkout, $people, $totalPrice, $apartmentCode, $customerCode)
     {
         $reservation->setStartDate($checkin);
         $reservation->setEndDate($checkout);
         $reservation->setPeople($people);
+        $reservation->setTotalPrice($totalPrice);
         $reservation->setApartmentCode($apartmentCode);
         $reservation->setCustomerCode($customerCode);
         return $reservation;
     }
 
-    public function calculatePrice($startDate, $endDate, $people)
+    public function checkDates($code, $checkin, $checkout)
+    {
+        $reservations = $this->getmodelsManager()->createBuilder()
+            ->columns("Reservation.*")
+            ->from("Reservation")
+            ->where("Reservation.apartment_code = '$code'")
+            ->getQuery()
+            ->execute();
+
+        $result = "";
+        foreach ($reservations as $reservation) {
+            $startDate = $reservation->getStartDate();
+            $endDate = $reservation->getEndDate();
+            if (($checkin<$startDate && $checkout<=$startDate) || ($checkin>=$endDate && $checkout>$endDate))
+            {
+                $result = true;
+            } else {
+                $result = false;
+                break;
+            }
+        }
+        return $result;
+
+    }
+
+    public function calculatePrice($startDate, $endDate, $code, $people)
     {
         $seasons = Season::find();
         $formatStart = new DateTime($startDate);
@@ -203,13 +229,13 @@ class Reservation extends \Phalcon\Mvc\Model
         foreach ($seasons as $season) {
             if ($startDate>=$season->getStartDate() && $endDate<=$season->getEndDate())
             {
+                $seasonNumber = $season->getCode();
+                $pricelist = Pricelist::findFirst("apartment_code = '$code' AND season_code = '$seasonNumber'");
                 if ($people>1)
                 {
-                    $price = $days*$season->getPriceRoom();
-                    return $price;
+                    $price = $days*$pricelist->getPriceRoom();
                 } else {
-                    $price = $days*$season->getPricePerson();
-                    return $price;
+                    $price = $days*$pricelist->getPricePerson();
                 }
             }
         }

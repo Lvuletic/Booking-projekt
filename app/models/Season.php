@@ -22,13 +22,6 @@ class Season extends \Phalcon\Mvc\Model
     protected $end_date;
 
     /**
-     *
-     * @var double
-     */
-    protected $price_person;
-    protected $price_room;
-
-    /**
      * Method to set the value of field code
      *
      * @param integer $code
@@ -68,26 +61,6 @@ class Season extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Method to set the value of field price
-     *
-     * @param double $price
-     * @return $this
-     */
-    public function setPricePerson($price_person)
-    {
-        $this->price_person = $price_person;
-
-        return $this;
-    }
-
-    public function setPriceRoom($price_room)
-    {
-        $this->price_room = $price_room;
-
-        return $this;
-    }
-
-    /**
      * Returns the value of field code
      *
      * @return integer
@@ -118,21 +91,6 @@ class Season extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field price
-     *
-     * @return double
-     */
-    public function getPricePerson()
-    {
-        return $this->price_person;
-    }
-
-    public function getPriceRoom()
-    {
-        return $this->price_room;
-    }
-
-    /**
      * Independent Column Mapping.
      */
     public function columnMap()
@@ -140,9 +98,7 @@ class Season extends \Phalcon\Mvc\Model
         return array(
             'code' => 'code', 
             'start_date' => 'start_date', 
-            'end_date' => 'end_date', 
-            'price_person' => 'price_person',
-            'price_room' => 'price_room'
+            'end_date' => 'end_date'
         );
     }
 

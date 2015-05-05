@@ -13,21 +13,23 @@ class AdminController extends ControllerBase
 
     }
 
-    public function priceAction()
+    public function seasonAction()
     {
-        $this->view->form = new SeasonForm();
+        $this->view->form1 = new SeasonForm();
+        $this->view->form2 = new SeasonForm();
+        $this->view->form3 = new SeasonForm();
+        $this->view->form4 = new SeasonForm();
+       // $this->view->form = new SeasonForm();
         $seasons = Season::find();
         foreach ($seasons as $season)
         {
             $this->view->{"start".$season->getCode()} = $season->getStartDate();
             $this->view->{"end".$season->getCode()} = $season->getEndDate();
-            $this->view->{"price".$season->getCode()} = $season->getPricePerson();
-            $this->view->{"room".$season->getCode()} = $season->getPriceRoom();
         }
 
     }
 
-    public function seasonAction()
+    public function saveSeasonAction()
     {
         if ($this->request->isPost()==true)
         {
@@ -41,21 +43,51 @@ class AdminController extends ControllerBase
                     $code = $season->getCode();
                     $startDate= $this->request->getPost("start_date".$code);
                     $endDate = $this->request->getPost("end_date".$code);
-                    $pricePerson = $this->request->getPost("price_person".$code);
-                    $priceRoom = $this->request->getPost("price_room".$code);
                     $season->setStartDate($startDate);
                     $season->setEndDate($endDate);
-                    $season->setPricePerson($pricePerson);
-                    $season->setPriceRoom($priceRoom);
                     if ($season->save()==false)
                     {
                         $transaction->rollBack();
                     }
                 }
+
                 $transaction->commit();
             } catch(Phalcon\Mvc\Model\Transaction\Failed $e) {
                 echo 'Failed, reason: ', $e->getMessage();
             }
         }
+    }
+
+    public function apartmentAction()
+    {
+        $apartments = Apartment::find();
+
+        $this->view->apartments = $apartments;
+        foreach ($apartments as $unit) {
+            $this->forms->set("form".$unit->getCode(), new ApartmentForm());
+        }
+
+    }
+
+    public function saveUnitAction($code)
+    {
+        $apartment = Apartment::findFirst($code);
+        $size = $this->request->getPost("size");
+        $internet = $this->request->getPost("internet");
+        $airconditioning = $this->request->getPost("airconditioning");
+        $bedrooms = $this->request->getPost("bedrooms");
+        $bathrooms = $this->request->getPost("bathrooms");
+        $apartment->setSize($size);
+        $apartment->setBedroomNumber($bedrooms);
+        $apartment->setBathroomNumber($bathrooms);
+        if ($internet == "on")
+        {
+            $apartment->setInternetAccess(1);
+        } else $apartment->setInternetAccess(0);
+        if ($airconditioning == "on")
+        {
+            $apartment->setAirconditioning(1);
+        } else $apartment->setAirconditioning(0);
+        $apartment->save();
     }
 }

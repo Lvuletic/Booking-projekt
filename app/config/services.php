@@ -175,5 +175,8 @@ $di->setShared('translate', function() use($di) {
 
 $di->set('router', function() use ($config){
     return require __DIR__.'/../../app/config/routes.php';
+});
 
+$di->set("forms", function(){
+    return new \Phalcon\Forms\Manager();
 });

@@ -23,26 +23,19 @@ class ApartmentController extends ControllerBase
         } else $this->view->airconditioning = "No";
         $this->view->bedrooms = $apartment->getBedroomNumber();
         $this->view->bathrooms = $apartment->getBathroomNumber();
-        if ($apartment->getAvailability()==1)
-        {
-            $this->view->availability = "Yes";
-        } else $this->view->availability = "No";
 
         $this->view->form = new ReservationForm();
-        $date = new DateTime();
-        $realDate = $date->format("Y-m-d");
-       // $this->view->pricePerson = $realDate;
-       // $this->view->priceRoom = $realDate;
-        $seasons = Season::find();
-        foreach ($seasons as $season) {
-            $seasonStart = $season->getStartDate();
-            $seasonEnd = $season->getEndDate();
-            if ($realDate>$seasonStart & $realDate<$seasonEnd)
-            {
-                $this->view->pricePerson = $season->getPricePerson();
-                $this->view->priceRoom = $season->getPriceRoom();
-            }
-        }
+
+        $pricelist = new Pricelist();
+        $prices = $pricelist->pricesBySeason($code);
+        $this->view->seasonPrices = $prices;
+
+        $availability = Reservation::find("apartment_code = '$code'");
+        if ($availability->count()>0)
+        {
+            $this->view->availability = "No";
+        } else $this->view->availability = "Yes";
+
 
 
     }

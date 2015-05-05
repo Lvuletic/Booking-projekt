@@ -5,7 +5,8 @@
   <ul class="nav navbar-nav">
     <li> <?php echo $this->tag->linkTo(array("index", "home page")) ?> </li>
     <li> <?php echo $this->tag->linkTo(array("apartment/list", "list")) ?> </li>
-    <li> <?php echo $this->tag->linkTo(array("admin/price", "prices")) ?> </li>
+    <li> <?php echo $this->tag->linkTo(array("admin/season", "seasons")) ?> </li>
+    <li> <?php echo $this->tag->linkTo(array("admin/apartment", "admin-units")) ?> </li>
   </ul>
   </div><!-- /.container-fluid -->
 </nav>

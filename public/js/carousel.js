@@ -3,11 +3,17 @@
  */
 
 $(document).ready(function() {
-    $('#myCarousel').carousel({
+
+    $('#homePageCarousel').carousel({
+        interval: 5000
+    });
+    $('#apartmentCarousel').carousel({
         interval: 0
     });
 
-    $('#myCarousel').on('slid.bs.carousel', function() {
+
+
+    /*$('#myCarousel').on('slid.bs.carousel', function() {
         //alert("slid");
-    });
+    });*/
 });
