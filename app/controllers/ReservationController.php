@@ -44,7 +44,7 @@ class ReservationController extends ControllerBase
         }
     }
 
-    public function checkAction()
+    public function checkDateAction()
     {
         if ($this->request->isAjax() == true)
         {
@@ -79,8 +79,23 @@ class ReservationController extends ControllerBase
             $response->setContent(json_encode($dates));
             return $response;
 
-
         }
+    }
+
+    public function checkPriceAction()
+    {
+        if ($this->request->isAjax() == true)
+        {
+            $response = new \Phalcon\Http\Response();
+            $startDate = $this->request->getPost("startDate");
+            $endDate = $this->request->getPost("endDate");
+            $people = $this->request->getPost("people");
+            $reservation = new Reservation();
+            $totalPrice = $reservation->calculatePrice($startDate, $endDate, $people);
+            $response->setContent($totalPrice);
+            return $response;
+        }
+
     }
 
     public function test($startDate, $endDate)

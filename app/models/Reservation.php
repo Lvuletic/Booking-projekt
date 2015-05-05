@@ -32,6 +32,7 @@ class Reservation extends \Phalcon\Mvc\Model
      * @var integer
      */
     protected $customer_code;
+    protected $total_price;
 
     /**
      * Method to set the value of field start_date
@@ -98,6 +99,13 @@ class Reservation extends \Phalcon\Mvc\Model
         return $this;
     }
 
+    public function setTotalPrice($total_price)
+    {
+        $this->total_price = $total_price;
+
+        return $this;
+    }
+
     /**
      * Returns the value of field start_date
      *
@@ -148,6 +156,11 @@ class Reservation extends \Phalcon\Mvc\Model
         return $this->customer_code;
     }
 
+    public function getTotalPrice()
+    {
+        return $this->total_price;
+    }
+
     /**
      * Independent Column Mapping.
      */
@@ -157,6 +170,7 @@ class Reservation extends \Phalcon\Mvc\Model
             'start_date' => 'start_date',
             'end_date' => 'end_date',
             'people' => 'people',
+            'total_price' => 'total_price',
             'apartment_code' => 'apartment_code',
             'customer_code' => 'customer_code'
         );
@@ -176,6 +190,30 @@ class Reservation extends \Phalcon\Mvc\Model
         $reservation->setApartmentCode($apartmentCode);
         $reservation->setCustomerCode($customerCode);
         return $reservation;
+    }
+
+    public function calculatePrice($startDate, $endDate, $people)
+    {
+        $seasons = Season::find();
+        $formatStart = new DateTime($startDate);
+        $formatEnd = new DateTime($endDate);
+        $diff = $formatStart->diff($formatEnd);
+        $days = $diff->format("%a");
+        $price = 0;
+        foreach ($seasons as $season) {
+            if ($startDate>=$season->getStartDate() && $endDate<=$season->getEndDate())
+            {
+                if ($people>1)
+                {
+                    $price = $days*$season->getPriceRoom();
+                    return $price;
+                } else {
+                    $price = $days*$season->getPricePerson();
+                    return $price;
+                }
+            }
+        }
+        return $price;
     }
 
     public function testNew()

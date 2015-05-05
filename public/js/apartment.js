@@ -2,18 +2,18 @@
  * Created by Luka on 30/04/15.
  */
 
+
 $(function() {
-    $( "#checkin").datepicker({
+    $("#checkin").datepicker({
         dateFormat: "yy-mm-dd"
     }).val()
 });
 
 $(function() {
-    $( "#checkout").datepicker({
+    $("#checkout").datepicker({
         dateFormat: "yy-mm-dd"
     }).val()
 });
-
 
 function checkDates()
 {
@@ -23,7 +23,7 @@ function checkDates()
     var realCode = code.slice(18,21);
     console.log(realCode);
     $.ajax({
-        url: "/booking/reservation/check",
+        url: "/booking/reservation/checkDate",
         type: "post",
         data: {"startDate" : checkin, "endDate" : checkout, "code" : realCode},
         dataType: "json",
@@ -49,3 +49,23 @@ function checkDates()
         }
     });
 }
+
+$(function() {
+    $("#buttonic").on("click","button", function() {
+        var checkin = $("#checkin").val();
+        var checkout = $("#checkout").val();
+        var code = $("#apartmentInfo").text();
+        var realCode = code.slice(18,21);
+        var people = $("#people").val();
+        $.ajax({
+            url: "/booking/reservation/checkPrice",
+            type: "post",
+            data: {"startDate" : checkin, "endDate" : checkout, "code" : realCode, "people": people},
+            success: function(response) {
+                //console.log(response);
+                $("#priceCheck").html("Total price is:" + response);
+            }
+        })
+    });
+
+});

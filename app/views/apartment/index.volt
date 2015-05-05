@@ -115,6 +115,12 @@ All dates are possible for reservation
 <div class="form-group">
 {{ submit_button("value": "Book this apartment", "class": "btn btn-primary") }}
 </div>
+<div id="buttonic">
+<button type="button">cijene</button>
+</div>
+<div id="priceCheck">
+
+</div>
 </div>
 
 <div>
