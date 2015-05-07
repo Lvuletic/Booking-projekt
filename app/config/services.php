@@ -114,12 +114,12 @@ $di->set("viewSimple", function() use ($config) {
     ));
     return $newView;
 }, true);
-
+/*
 $di->set('crypt', function () use ($config) {
     $crypt = new Phalcon\Crypt();
     $crypt->setKey($config->application->encryptKey);
     return $crypt;
-});
+});*/
 
 $di->set('elements', function(){
     return new Elements();

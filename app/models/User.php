@@ -183,4 +183,15 @@ class User extends \Phalcon\Mvc\Model
         );
     }
 
+    public function createNew($name, $phone, $email, $password)
+    {
+        $user = new User();
+        $user->setName($name);
+        $user->setPhone($phone);
+        $user->setEmail($email);
+        $user->setPassword($password);
+
+        return $user;
+    }
+
 }
