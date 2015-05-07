@@ -20,23 +20,19 @@ class ApartmentForm extends Form
 
         $this->add($size);
 
-        $internet = new Check("internet");
-        $internet->setLabel("Internet access");
-
-        $this->add($internet);
-
-        $ac = new Check("airconditioning");
-        $ac->setLabel("Air conditioning");
-
-        $this->add($ac);
-
         $bedrooms = new Text("bedrooms");
         $bedrooms->setLabel("Bedrooms");
+        $bedrooms->addValidator(new PresenceOf(array(
+            'message' => 'Number of bedrooms is required'
+        )));
 
         $this->add($bedrooms);
 
         $bathrooms = new Text("bathrooms");
         $bathrooms->setLabel("Bathrooms");
+        $bathrooms->addValidator(new PresenceOf(array(
+            'message' => 'Number of bathrooms is required'
+        )));
 
         $this->add($bathrooms);
     }

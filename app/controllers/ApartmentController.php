@@ -13,14 +13,6 @@ class ApartmentController extends ControllerBase
         $apartment = Apartment::findFirst($code);
         $this->view->apartmentCode = $apartment->getCode();
         $this->view->size = $apartment->getSize();
-        if ($apartment->getInternetAccess()==1)
-        {
-            $this->view->internet = "Yes";
-        } else $this->view->internet = "No";
-        if ($apartment->getAirconditioning()==1)
-        {
-            $this->view->airconditioning = "Yes";
-        } else $this->view->airconditioning = "No";
         $this->view->bedrooms = $apartment->getBedroomNumber();
         $this->view->bathrooms = $apartment->getBathroomNumber();
 
@@ -33,8 +25,8 @@ class ApartmentController extends ControllerBase
         $availability = Reservation::find("apartment_code = '$code'");
         if ($availability->count()>0)
         {
-            $this->view->availability = "No";
-        } else $this->view->availability = "Yes";
+            $this->view->availability = false;
+        } else $this->view->availability = true;
 
 
 

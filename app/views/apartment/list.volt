@@ -9,16 +9,6 @@
 <p>
 Apartment number: {{ item.getCode() }} <br>
 Size: {{ item.getSize() }} <br>
-{% if item.getInternetAccess() == 1 %}
-Internet access: Yes <br>
-{% else %}
-Internet access: No <br>
-{% endif %}
-{% if item.getAirconditioning() == 1 %}
-Air-conditioning: Yes <br>
-{% else %}
-Air-conditioning: No <br>
-{% endif %}
 Bedrooms: {{ item.getBedroomNumber() }} <br>
 Bathrooms: {{ item.getBathroomNumber() }} <br>
 <a class="btn btn-primary" href="index/{{ item.getCode() }}">Book this apartment</a>

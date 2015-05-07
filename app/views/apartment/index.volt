@@ -1,4 +1,4 @@
-
+{{ content() }}
 <div class="col-md-12">
 <div id="apartmentCarousel" class="carousel slide" data-ride="carousel">
 
@@ -79,11 +79,9 @@ Nullam felis risus, tincidunt in posuere fringilla, auctor eget ipsum.
 <h3> FEATURE LIST </h3>
 <p id="apartmentInfo">Apartment number: {{ apartmentCode }} <br>
 Size: {{ size }} <br>
-Internet access: {{ internet }} <br>
-Air-conditioning: {{ airconditioning }} <br>
 Bedrooms: {{ bedrooms }} <br>
 Bathrooms: {{ bathrooms }} <br>
-{% if availability=="Yes" %}
+{% if availability == true %}
 All dates are available for reservation
 {% else %}
 <button type="button" class="btn btn-info" onclick="checkDates()">Check available dates</button>

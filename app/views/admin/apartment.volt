@@ -1,4 +1,4 @@
-
+{{ content() }}
 {% for unit in apartments %}
 
 {{ form("Admin/saveUnit/"~unit.getCode(), "class": "form-inline", "role": "form") }}
@@ -13,24 +13,6 @@
         </div>
 
         <div class="form-group">
-        {{ forms.get("form"~unit.getCode()).label("internet") }}
-        {% if unit.getInternetAccess()==1 %}
-        {{ forms.get("form"~unit.getCode()).render("internet", ["class": "form-control",  "checked": "true"]) }}
-        {% else %}
-        {{ forms.get("form"~unit.getCode()).render("internet", ["class": "form-control"]) }}
-        {% endif %}
-        </div>
-
-        <div class="form-group">
-        {{ forms.get("form"~unit.getCode()).label("airconditioning") }}
-        {% if unit.getAirconditioning()==1 %}
-        {{ forms.get("form"~unit.getCode()).render("airconditioning", ["class": "form-control",  "checked": "true"]) }}
-        {% else %}
-        {{ forms.get("form"~unit.getCode()).render("airconditioning", ["class": "form-control"]) }}
-        {% endif %}
-        </div>
-
-        <div class="form-group">
         {{ forms.get("form"~unit.getCode()).label("bedrooms") }}
         {{ forms.get("form"~unit.getCode()).render("bedrooms", ["class": "form-control", "value": unit.getBedroomNumber(), "placeholder": "Bedrooms"]) }}
         </div>
@@ -39,6 +21,16 @@
         {{ forms.get("form"~unit.getCode()).label("bathrooms") }}
         {{ forms.get("form"~unit.getCode()).render("bathrooms", ["class": "form-control", "value": unit.getBathroomNumber(), "placeholder": "Bathrooms"]) }}
         </div>
+
+        {% for spec in specifications %}
+        {% if spec.unitSpecification.getApartmentCode() == unit.getCode() %}
+        <div class="form-group">
+        {{ forms.get("form"~unit.getCode()~"Spec"~spec.specification.getCode()).label("value"~spec.specification.getCode()) }}
+        {{ forms.get("form"~unit.getCode()~"Spec"~spec.specification.getCode()).render("value"~spec.specification.getCode(), ["class": "form-control", "value": spec.unitSpecification.getValue(), "placeholder": "Value"]) }}
+        </div>
+        {% endif %}
+        {% endfor %}
+        <?php echo $this->tag->linkTo(array("admin/add/".$unit->getCode(), "Add new specification")) ?>
     </div>
 </div>
 

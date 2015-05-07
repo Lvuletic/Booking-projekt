@@ -16,11 +16,31 @@ class ReservationController extends ControllerBase
             $checkin = $this->request->getPost("checkin");
             $checkout = $this->request->getPost("checkout");
             $reservation = new Reservation();
-            $available = $reservation->checkDates($code, $checkin, $checkout);
-            if ($available == true)
+            $availability = Reservation::find("apartment_code = '$code'");
+            if ($availability->count()>0)
             {
+                $freedate = $reservation->checkDates($code, $checkin, $checkout);
+                if ($freedate == true)
+                {
+                    $totalPrice = $reservation->calculatePrice($checkin, $checkout, $code, $people);
+                    $reservation = $reservation->createNew($reservation, $checkin, $checkout, $people, $totalPrice, $code, 1002);
+                    if ($reservation->save() == false)
+                    {
+                        foreach ($reservation->getMessages() as $message) {
+                            $this->flash->notice($message);
+                            return $this->dispatcher->forward(array("controller" => "apartment", "action" => "index", "param" => $code));
+                        }
+                    } else {
+                        $this->flash->success("Reservation successful");
+                        return $this->dispatcher->forward(array("controller" => "apartment", "action" => "index", "param" => $code));
+                    }
+                } else {
+                    $this->flash->error("The chosen period is not available for reservation, please choose another one");
+                    return $this->dispatcher->forward(array("controller" => "apartment", "action" => "index", "param" => $code));
+                }
+            } else {
                 $totalPrice = $reservation->calculatePrice($checkin, $checkout, $code, $people);
-                $reservation = $reservation->createNew($reservation, $checkin, $checkout, $people, $totalPrice, $code, 1001);
+                $reservation = $reservation->createNew($reservation, $checkin, $checkout, $people, $totalPrice, $code, 1002);
                 if ($reservation->save() == false)
                 {
                     foreach ($reservation->getMessages() as $message) {
@@ -31,11 +51,7 @@ class ReservationController extends ControllerBase
                     $this->flash->success("Reservation successful");
                     return $this->dispatcher->forward(array("controller" => "apartment", "action" => "index", "param" => $code));
                 }
-            } else {
-                $this->flashSession->error("The chosen period is not available for reservation, please choose another one");
-                return $this->dispatcher->forward(array("controller" => "apartment", "action" => "index", "param" => $code));
             }
-
         }
     }
 

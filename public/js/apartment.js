@@ -49,7 +49,7 @@ function priceCheck()
         type: "post",
         data: {"startDate" : checkin, "endDate" : checkout, "code" : realCode, "people": people},
         success: function(response) {
-            //console.log(response);
+            console.log(response);
             $("#priceCheck").html("Total price is:" + response);
         }
     })

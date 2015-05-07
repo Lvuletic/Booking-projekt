@@ -2,14 +2,14 @@
 
 use Phalcon\Mvc\Model\Validator\Email as Email;
 
-class Customer extends \Phalcon\Mvc\Model
+class User extends \Phalcon\Mvc\Model
 {
 
     /**
      *
      * @var integer
      */
-    protected $code;
+    protected $id;
 
     /**
      *
@@ -36,14 +36,14 @@ class Customer extends \Phalcon\Mvc\Model
     protected $phone;
 
     /**
-     * Method to set the value of field code
+     * Method to set the value of field id
      *
-     * @param integer $code
+     * @param integer $id
      * @return $this
      */
-    public function setCode($code)
+    public function setId($id)
     {
-        $this->code = $code;
+        $this->id = $id;
 
         return $this;
     }
@@ -101,13 +101,13 @@ class Customer extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field code
+     * Returns the value of field id
      *
      * @return integer
      */
-    public function getCode()
+    public function getId()
     {
-        return $this->code;
+        return $this->id;
     }
 
     /**
@@ -175,7 +175,7 @@ class Customer extends \Phalcon\Mvc\Model
     public function columnMap()
     {
         return array(
-            'code' => 'code', 
+            'id' => 'id', 
             'name' => 'name', 
             'password' => 'password', 
             'email' => 'email', 

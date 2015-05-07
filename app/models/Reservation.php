@@ -223,19 +223,25 @@ class Reservation extends \Phalcon\Mvc\Model
         $seasons = Season::find();
         $formatStart = new DateTime($startDate);
         $formatEnd = new DateTime($endDate);
-        $diff = $formatStart->diff($formatEnd);
-        $days = $diff->format("%a");
+        $interval = new DateInterval('P1D');
+        $daterange = new DatePeriod($formatStart, $interval ,$formatEnd);
+        //$diff = $formatStart->diff($formatEnd);
+        //$days = $diff->format("%a");
         $price = 0;
-        foreach ($seasons as $season) {
-            if ($startDate>=$season->getStartDate() && $endDate<=$season->getEndDate())
+        foreach ($seasons as $season)
+        {
+            foreach ($daterange as $date)
             {
-                $seasonNumber = $season->getCode();
-                $pricelist = Pricelist::findFirst("apartment_code = '$code' AND season_code = '$seasonNumber'");
-                if ($people>1)
+                if ($date->format("Y-m-d")>=$season->getStartDate() && $date->format("Y-m-d")<=$season->getEndDate())
                 {
-                    $price = $days*$pricelist->getPriceRoom();
-                } else {
-                    $price = $days*$pricelist->getPricePerson();
+                    $seasonNumber = $season->getCode();
+                    $pricelist = Pricelist::findFirst("apartment_code = '$code' AND season_code = '$seasonNumber'");
+                    if ($people>1)
+                    {
+                        $price += $pricelist->getPriceRoom();
+                    } else {
+                        $price += $pricelist->getPricePerson();
+                    }
                 }
             }
         }

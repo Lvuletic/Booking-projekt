@@ -19,24 +19,6 @@ class Apartment extends \Phalcon\Mvc\Model
      *
      * @var integer
      */
-    protected $internet_access;
-
-    /**
-     *
-     * @var integer
-     */
-    protected $availability;
-
-    /**
-     *
-     * @var integer
-     */
-    protected $airconditioning;
-
-    /**
-     *
-     * @var integer
-     */
     protected $bedroom_number;
 
     /**
@@ -44,6 +26,7 @@ class Apartment extends \Phalcon\Mvc\Model
      * @var integer
      */
     protected $bathroom_number;
+
 
     /**
      * Method to set the value of field code
@@ -67,45 +50,6 @@ class Apartment extends \Phalcon\Mvc\Model
     public function setSize($size)
     {
         $this->size = $size;
-
-        return $this;
-    }
-
-    /**
-     * Method to set the value of field internet_access
-     *
-     * @param integer $internet_access
-     * @return $this
-     */
-    public function setInternetAccess($internet_access)
-    {
-        $this->internet_access = $internet_access;
-
-        return $this;
-    }
-
-    /**
-     * Method to set the value of field availability
-     *
-     * @param integer $availability
-     * @return $this
-     */
-    public function setAvailability($availability)
-    {
-        $this->availability = $availability;
-
-        return $this;
-    }
-
-    /**
-     * Method to set the value of field airconditioning
-     *
-     * @param integer $airconditioning
-     * @return $this
-     */
-    public function setAirconditioning($airconditioning)
-    {
-        $this->airconditioning = $airconditioning;
 
         return $this;
     }
@@ -157,36 +101,6 @@ class Apartment extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field internet_access
-     *
-     * @return integer
-     */
-    public function getInternetAccess()
-    {
-        return $this->internet_access;
-    }
-
-    /**
-     * Returns the value of field availability
-     *
-     * @return integer
-     */
-    public function getAvailability()
-    {
-        return $this->availability;
-    }
-
-    /**
-     * Returns the value of field airconditioning
-     *
-     * @return integer
-     */
-    public function getAirconditioning()
-    {
-        return $this->airconditioning;
-    }
-
-    /**
      * Returns the value of field bedroom_number
      *
      * @return integer
@@ -213,12 +127,22 @@ class Apartment extends \Phalcon\Mvc\Model
     {
         return array(
             'code' => 'code', 
-            'size' => 'size', 
-            'internet_access' => 'internet_access', 
-            'availability' => 'availability', 
-            'airconditioning' => 'airconditioning', 
+            'size' => 'size',
             'bedroom_number' => 'bedroom_number', 
             'bathroom_number' => 'bathroom_number'
+        );
+    }
+
+    public function initialize()
+    {
+        $this->hasMany('code', 'UnitSpecification', 'apartment_code');
+
+        $this->hasManyToMany(
+            "code",
+            "UnitSpecification",
+            "apartment_code", "specification_code",
+            "Specification",
+            "code"
         );
     }
 

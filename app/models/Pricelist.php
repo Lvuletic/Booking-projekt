@@ -138,7 +138,7 @@ class Pricelist extends \Phalcon\Mvc\Model
             ->columns(array("Pricelist.*", "Season.*"))
             ->from("Pricelist")
             ->join("Season", "Pricelist.apartment_code = '$code' AND Pricelist.season_code = Season.code")
-            ->orderBy("Pricelist.apartment_code")
+            ->orderBy("Season.code")
             ->getQuery()
             ->execute();
 

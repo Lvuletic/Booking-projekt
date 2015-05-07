@@ -20,6 +20,7 @@ class Season extends \Phalcon\Mvc\Model
      * @var string
      */
     protected $end_date;
+    protected $name;
 
     /**
      * Method to set the value of field code
@@ -60,6 +61,13 @@ class Season extends \Phalcon\Mvc\Model
         return $this;
     }
 
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
     /**
      * Returns the value of field code
      *
@@ -90,13 +98,19 @@ class Season extends \Phalcon\Mvc\Model
         return $this->end_date;
     }
 
+    public function getName()
+    {
+        return $this->name;
+    }
+
     /**
      * Independent Column Mapping.
      */
     public function columnMap()
     {
         return array(
-            'code' => 'code', 
+            'code' => 'code',
+            'name' => 'name',
             'start_date' => 'start_date', 
             'end_date' => 'end_date'
         );
