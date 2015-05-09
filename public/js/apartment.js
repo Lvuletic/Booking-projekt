@@ -5,7 +5,14 @@
 
 $(function() {
     $("#checkin").datepicker({
-        dateFormat: "yy-mm-dd"
+        minDate: "+1D",
+        dateFormat: "yy-mm-dd",
+        onSelect: function(date){
+            var selectedDate = new Date(date);
+            var endDate = new Date(selectedDate.getTime() + 86400000);
+
+            $("#checkout").datepicker("option", "minDate", endDate);
+        }
     }).val()
 });
 
@@ -19,13 +26,12 @@ function checkDates()
 {
     var checkin = $("#checkin").val();
     var checkout = $("#checkout").val();
-    var code = $("#apartmentInfo").text();
-    var realCode = code.slice(18,21);
+    var code = apartmentInfo.getAttribute("data-apartmentCode");
     //console.log(realCode);
     $.ajax({
         url: "/booking/reservation/checkDate",
         type: "post",
-        data: {"startDate" : checkin, "endDate" : checkout, "code" : realCode},
+        data: {"startDate" : checkin, "endDate" : checkout, "code" : code},
         success: function(response) {
             console.log(response);
             if (response == true)
@@ -41,13 +47,12 @@ function priceCheck()
 {
     var checkin = $("#checkin").val();
     var checkout = $("#checkout").val();
-    var code = $("#apartmentInfo").text();
-    var realCode = code.slice(18,21);
+    var code = apartmentInfo.getAttribute("data-apartmentCode");
     var people = $("#people").val();
     $.ajax({
         url: "/booking/reservation/checkPrice",
         type: "post",
-        data: {"startDate" : checkin, "endDate" : checkout, "code" : realCode, "people": people},
+        data: {"startDate" : checkin, "endDate" : checkout, "code" : code, "people": people},
         success: function(response) {
             console.log(response);
             $("#priceCheck").html("Total price is:" + response);

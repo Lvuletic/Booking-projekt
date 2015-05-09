@@ -12,16 +12,16 @@ use Phalcon\Forms\Element\Date;
 use Phalcon\Validation\Validator\PresenceOf;
 use Phalcon\Validation\Validator\Regex;
 
-class SeasonForm extends Form
+class NewSeasonForm extends Form
 {
-    public function initialize($season)
+    public function initialize()
     {
-        $name = new Text("name".$season->getCode());
+        $name = new Text("name");
         $name->setLabel("Name");
 
         $this->add($name);
 
-        $startDate = new Date("start_date".$season->getCode());
+        $startDate = new Date("start_date");
         $startDate->setLabel("Start date");
         $startDate->addValidator(new PresenceOf(array(
             'message' => 'Start date is required'
@@ -29,7 +29,7 @@ class SeasonForm extends Form
 
         $this->add($startDate);
 
-        $endDate = new Date("end_date".$season->getCode());
+        $endDate = new Date("end_date");
         $endDate->setLabel("End date");
         $endDate->addValidator(new PresenceOf(array(
             'message' => 'End date is required'

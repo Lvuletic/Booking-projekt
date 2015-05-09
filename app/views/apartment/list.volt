@@ -11,6 +11,13 @@ Apartment number: {{ item.getCode() }} <br>
 Size: {{ item.getSize() }} <br>
 Bedrooms: {{ item.getBedroomNumber() }} <br>
 Bathrooms: {{ item.getBathroomNumber() }} <br>
+
+{% for spec in specifications %}
+{% if spec.unitSpecification.getApartmentCode() == item.getCode() %}
+{{ spec.specification.getName() }} - {{ spec.unitSpecification.getValue() }} <br>
+{% endif %}
+{% endfor %}
+
 <a class="btn btn-primary" href="index/{{ item.getCode() }}">Book this apartment</a>
 </p>
 </div>

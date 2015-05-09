@@ -77,10 +77,20 @@ Nullam felis risus, tincidunt in posuere fringilla, auctor eget ipsum.
 
 <div class="col-md-4">
 <h3> FEATURE LIST </h3>
-<p id="apartmentInfo">Apartment number: {{ apartmentCode }} <br>
+
+<p id="apartmentInfo" data-apartmentCode={{ apartmentCode }}>Apartment number: {{ apartmentCode }} <br>
 Size: {{ size }} <br>
 Bedrooms: {{ bedrooms }} <br>
 Bathrooms: {{ bathrooms }} <br>
+
+
+{% for spec in specifications %}
+{% if spec.unitSpecification.getApartmentCode() == apartmentCode %}
+{{ spec.specification.getName() }} - {{ spec.unitSpecification.getValue() }} <br>
+{% endif %}
+{% endfor %}
+
+
 {% if availability == true %}
 All dates are available for reservation
 {% else %}

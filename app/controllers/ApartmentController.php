@@ -28,6 +28,12 @@ class ApartmentController extends ControllerBase
             $this->view->availability = false;
         } else $this->view->availability = true;
 
+        $apartments = Apartment::find();
+        $this->view->apartments = $apartments;
+        $unitSpec = new UnitSpecification();
+        $allSpecs = $unitSpec->findSpecification();
+        $this->view->specifications = $allSpecs;
+
 
 
     }
@@ -36,6 +42,9 @@ class ApartmentController extends ControllerBase
     {
         $list = Apartment::find();
         $this->view->list = $list;
+        $unitSpec = new UnitSpecification();
+        $allSpecs = $unitSpec->findSpecification();
+        $this->view->specifications = $allSpecs;
 
     }
 

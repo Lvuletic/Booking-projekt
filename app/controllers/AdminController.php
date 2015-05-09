@@ -21,6 +21,7 @@ class AdminController extends ControllerBase
         {
             $this->forms->set("form".$season->getCode(), new SeasonForm($season));
         }
+        $this->view->form = new NewSeasonForm();
     }
 
     public function apartmentAction()
@@ -38,7 +39,6 @@ class AdminController extends ControllerBase
             {
                 if ($spec->unitSpecification->getApartmentCode() == $unit->getCode())
                 {
-                    $specName = $spec->specification->getName();
                     $specCode = $spec->specification->getCode();
                     $this->forms->set("form" . $code . "Spec" . $specCode, new EditSpecificationForm($spec));
                 }
@@ -57,27 +57,32 @@ class AdminController extends ControllerBase
         $this->view->form = new UnitSpecificationForm();
     }
 
-    public function saveSeasonAction($code)
+    public function saveSeasonAction()
     {
         if ($this->request->isPost()==true)
         {
-            $season = Season::findFirst($code);
-            $name = $this->request->getPost("name");
-            $startDate= $this->request->getPost("start_date".$code);
-            $endDate = $this->request->getPost("end_date".$code);
-            $season->setName($name);
-            $season->setStartDate($startDate);
-            $season->setEndDate($endDate);
-            if ($season->save()==false)
+            $manager = new Phalcon\Mvc\Model\Transaction\Manager;
+            $transaction = $manager->get();
+            $seasons = Season::find();
+            foreach ($seasons as $season)
             {
-                foreach($season->getMessages() as $message)
+                $season->setTransaction($transaction);
+                $code = $season->getCode();
+                $name = $this->request->getPost("name".$code);
+                $startDate= $this->request->getPost("start_date".$code);
+                $endDate = $this->request->getPost("end_date".$code);
+                $season->setName($name);
+                $season->setStartDate($startDate);
+                $season->setEndDate($endDate);
+                if ($season->save()==false)
                 {
-                    echo $message;
+                    $transaction->rollback();
                 }
-            } else {
-                $this->flash->success("Season successfully saved");
-                return $this->dispatcher->forward(array("controller" => "admin", "action" => "season"));
             }
+            $transaction->commit();
+            $this->flash->success("Seasons successfully updated");
+            return $this->dispatcher->forward(array("controller" => "admin", "action" => "season"));
+
         }
     }
 
@@ -111,7 +116,7 @@ class AdminController extends ControllerBase
             }
             $transaction->commit();
             $this->flash->success("Apartment successfully updated");
-            return $this->dispatcher->forward(array("controller" => "admin", "action" => "apartment"));
+            return $this->response->redirect("admin/apartment");
         } catch(Phalcon\Mvc\Model\Transaction\Failed $e)
         {
             echo 'Failed, reason: ', $e->getMessage();
@@ -149,6 +154,24 @@ class AdminController extends ControllerBase
         }
     }
 
+    public function createSeasonAction()
+    {
+        $season = new Season();
+        $season->setName($this->request->getPost("name"));
+        $season->setStartDate($this->request->getPost("start_date"));
+        $season->setEndDate($this->request->getPost("end_date"));
+        if ($season->save()==false)
+        {
+            foreach ($season->getMessages() as $message)
+            {
+                echo $message;
+            }
+        } else {
+            $this->flash->success("New season added");
+            return $this->dispatcher->forward(array("controller" => "admin", "action" => "season"));
+        };
+    }
+
     public function saveSpecificationAction($code)
     {
         $unitSpecifications = UnitSpecification::find();
@@ -172,8 +195,38 @@ class AdminController extends ControllerBase
             }
         } else {
             $this->flash->success("New specification successfully added to apartment");
-            return $this->dispatcher->forward(array("controller" => "admin", "action" => "apartment"));
-        };
+            return $this->response->redirect("admin/apartment");
+        }
+    }
+
+    public function deleteSeasonAction($code)
+    {
+        $season = Season::findFirst($code);
+        if ($season->delete()==false)
+        {
+            foreach($season->getMessages() as $message)
+            {
+                echo $message;
+            }
+        } else {
+            $this->flash->success("Season successfully deleted");
+            return $this->dispatcher->forward(array("controller" => "admin", "action" => "season"));
+        }
+    }
+
+    public function removeSpecificationAction($code)
+    {
+        $unitSpec = UnitSpecification::findFirst($code);
+        if ($unitSpec->delete()==false)
+        {
+            foreach($unitSpec->getMessages() as $message)
+            {
+                echo $message;
+            }
+        } else {
+            $this->flash->success("Specification successfully removed");
+            return $this->response->redirect("admin/apartment");
+        }
 
     }
 }

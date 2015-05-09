@@ -40,7 +40,7 @@ class ReservationController extends ControllerBase
                 }
             } else {
                 $totalPrice = $reservation->calculatePrice($checkin, $checkout, $code, $people);
-                $reservation = $reservation->createNew($reservation, $checkin, $checkout, $people, $totalPrice, $code, 1002);
+                $reservation = $reservation->createNew($reservation, $checkin, $checkout, $people, $totalPrice, $code, $this->session->get("user_id"));
                 if ($reservation->save() == false)
                 {
                     foreach ($reservation->getMessages() as $message) {
