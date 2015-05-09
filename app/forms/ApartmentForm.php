@@ -8,7 +8,6 @@
 
 use Phalcon\Forms\Form;
 use Phalcon\Forms\Element\Text;
-use Phalcon\Forms\Element\Check;
 use Phalcon\Validation\Validator\PresenceOf;
 
 class ApartmentForm extends Form
@@ -16,12 +15,22 @@ class ApartmentForm extends Form
     public function initialize()
     {
         $size = new Text("size");
-        $size->setLabel("Size");
+        $size->setLabel($this->translate->_("size"));
 
         $this->add($size);
 
+        $rating = new Text("rating");
+        $rating->setLabel($this->translate->_("rating"));
+
+        $this->add($rating);
+
+        $category = new Text("category");
+        $category->setLabel($this->translate->_("category"));
+
+        $this->add($category);
+
         $bedrooms = new Text("bedrooms");
-        $bedrooms->setLabel("Bedrooms");
+        $bedrooms->setLabel($this->translate->_("bedrooms"));
         $bedrooms->addValidator(new PresenceOf(array(
             'message' => 'Number of bedrooms is required'
         )));
@@ -29,7 +38,7 @@ class ApartmentForm extends Form
         $this->add($bedrooms);
 
         $bathrooms = new Text("bathrooms");
-        $bathrooms->setLabel("Bathrooms");
+        $bathrooms->setLabel($this->translate->_("bathrooms"));
         $bathrooms->addValidator(new PresenceOf(array(
             'message' => 'Number of bathrooms is required'
         )));

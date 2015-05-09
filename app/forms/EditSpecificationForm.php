@@ -16,7 +16,7 @@ class EditSpecificationForm extends Form
     public function initialize($spec)
     {
         $text = new Text("value".$spec->specification->getCode());
-        $text->setLabel($spec->specification->getName());
+        $text->setLabel($this->translate->_($spec->specification->getName()));
         $text->addValidator(new PresenceOf(array(
             'message' => 'Value is required'
         )));

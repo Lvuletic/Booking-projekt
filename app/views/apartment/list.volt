@@ -7,18 +7,20 @@
 <div class="col-md-4">
 <h3> FEATURE LIST </h3>
 <p>
-Apartment number: {{ item.getCode() }} <br>
-Size: {{ item.getSize() }} <br>
-Bedrooms: {{ item.getBedroomNumber() }} <br>
-Bathrooms: {{ item.getBathroomNumber() }} <br>
+<?php echo $t->_("unitNumber") ?>: {{ item.getCode() }} <br>
+<?php echo $t->_("size") ?>: {{ item.getSize() }} <br>
+<?php echo $t->_("rating") ?>: {{ item.getRating() }} <br>
+<?php echo $t->_("category") ?>: {{ item.getCategory() }} <br>
+<?php echo $t->_("bedrooms") ?>: {{ item.getBedroomNumber() }} <br>
+<?php echo $t->_("bathrooms") ?>: {{ item.getBathroomNumber() }} <br>
 
 {% for spec in specifications %}
 {% if spec.unitSpecification.getApartmentCode() == item.getCode() %}
-{{ spec.specification.getName() }} - {{ spec.unitSpecification.getValue() }} <br>
+<?php echo $t->_($spec->specification->getName()) ?> - {{ spec.unitSpecification.getValue() }} <br>
 {% endif %}
 {% endfor %}
 
-<a class="btn btn-primary" href="index/{{ item.getCode() }}">Book this apartment</a>
+<a class="btn btn-primary" href="index/{{ item.getCode() }}"><?php echo $t->_("bookThis") ?></a>
 </p>
 </div>
 

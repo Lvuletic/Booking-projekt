@@ -8,7 +8,7 @@
         {{ form.render("name", ["class": "form-control", "placeholder": "Name"]) }}
         </div>
          <div class="form-group">
-          {{ submit_button("value": "Add", "class": "btn btn-primary") }}
+          {{ submit_button("value": "Add", "class": "btn btn-default") }}
          </div>
 
     </div>

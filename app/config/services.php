@@ -158,16 +158,23 @@ $di->set('modelsCache', function() {
 });
 
 $di->setShared('translate', function() use($di) {
-    // = $di->getShared("session");
-    $dispatcher = $di->getShared("dispatcher");
-    $language = $dispatcher->getParam("language");
+    $session = $di->getShared("session");
+    $language = $session->get("lang");
+    //$language = $this->dispatcher->getParam("language");
     if (!$language)
     {
-        $dispatcher->setParam("language", "en");
-        //$this->session->set("lang", "en");
-        $language = "en";
+        //$this->dispatcher->setParam("language", "en");
+        $session->set("lang", "en");
+        //$language = "en";
     }
-    require '../app/messages/'.$language.".php";
+    $lang = Language::findFirst("name = '$language'");
+    $langWord = new LangWord();
+    $words = $langWord->findWords($lang->getCode());
+    $messages = array();
+    foreach ($words as $word=>$item)
+    {
+        $messages[$item->name] = $item->value;
+    }
     return new Phalcon\Translate\Adapter\NativeArray(array(
         "content" => $messages
     ));

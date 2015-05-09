@@ -19,7 +19,11 @@
     <li> <?php echo $this->tag->linkTo(array("admin/season", "seasons")) ?> </li>
     <li> <?php echo $this->tag->linkTo(array("admin/apartment", "admin-units")) ?> </li>
     <li> <?php echo $this->tag->linkTo(array("admin/specification", "admin-specs")) ?> </li>
+    <li> <?php echo $this->tag->linkTo(array("admin/language", "admin-lang")) ?> </li>
     <?php } ?>
+
+    <li> <?php echo $this->tag->linkTo(array("index/changeLanguage/de", "ger")) ?> </li>
+    <li> <?php echo $this->tag->linkTo(array("index/changeLanguage/en", "en")) ?> </li>
 
   </ul>
   </div><!-- /.container-fluid -->

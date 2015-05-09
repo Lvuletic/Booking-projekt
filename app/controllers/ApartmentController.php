@@ -8,6 +8,11 @@
 
 class ApartmentController extends ControllerBase
 {
+    public function initialize()
+    {
+        parent::initialize();
+    }
+
     public function indexAction($code)
     {
         $apartment = Apartment::findFirst($code);
@@ -15,6 +20,8 @@ class ApartmentController extends ControllerBase
         $this->view->size = $apartment->getSize();
         $this->view->bedrooms = $apartment->getBedroomNumber();
         $this->view->bathrooms = $apartment->getBathroomNumber();
+        $this->view->rating = $apartment->getRating();
+        $this->view->category = $apartment->getCategory();
 
         $this->view->form = new ReservationForm();
 

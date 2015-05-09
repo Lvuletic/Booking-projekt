@@ -17,12 +17,12 @@ class NewSeasonForm extends Form
     public function initialize()
     {
         $name = new Text("name");
-        $name->setLabel("Name");
+        $name->setLabel($this->translate->_("name"));
 
         $this->add($name);
 
         $startDate = new Date("start_date");
-        $startDate->setLabel("Start date");
+        $startDate->setLabel($this->translate->_("startDate"));
         $startDate->addValidator(new PresenceOf(array(
             'message' => 'Start date is required'
         )));
@@ -30,7 +30,7 @@ class NewSeasonForm extends Form
         $this->add($startDate);
 
         $endDate = new Date("end_date");
-        $endDate->setLabel("End date");
+        $endDate->setLabel($this->translate->_("endDate"));
         $endDate->addValidator(new PresenceOf(array(
             'message' => 'End date is required'
         )));

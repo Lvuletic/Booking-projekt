@@ -15,6 +15,20 @@
         </div>
 
         <div class="form-group">
+        {{ forms.get("form"~unit.getCode()).label("rating", ["class": "col-sm-2"]) }}
+        <div class="col-sm-6">
+        {{ forms.get("form"~unit.getCode()).render("rating", ["class": "form-control", "value": unit.getRating(), "placeholder": "Rating"]) }}
+        </div>
+        </div>
+
+        <div class="form-group">
+        {{ forms.get("form"~unit.getCode()).label("category", ["class": "col-sm-2"]) }}
+        <div class="col-sm-6">
+        {{ forms.get("form"~unit.getCode()).render("category", ["class": "form-control", "value": unit.getCategory(), "placeholder": "Category"]) }}
+        </div>
+        </div>
+
+        <div class="form-group">
         {{ forms.get("form"~unit.getCode()).label("bedrooms", ["class": "col-sm-2"]) }}
         <div class="col-sm-6">
         {{ forms.get("form"~unit.getCode()).render("bedrooms", ["class": "form-control", "value": unit.getBedroomNumber(), "placeholder": "Bedrooms"]) }}
@@ -24,7 +38,8 @@
         {{ forms.get("form"~unit.getCode()).label("bathrooms", ["class": "col-sm-2"]) }}
         <div class="col-sm-6">
         {{ forms.get("form"~unit.getCode()).render("bathrooms", ["class": "form-control", "value": unit.getBathroomNumber(), "placeholder": "Bathrooms"]) }}
-        </div></div>
+        </div>
+        </div>
 
         {% for spec in specifications %}
         {% if spec.unitSpecification.getApartmentCode() == unit.getCode() %}

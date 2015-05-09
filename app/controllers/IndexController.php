@@ -2,7 +2,10 @@
 
 class IndexController extends ControllerBase
 {
-
+    public function initialize()
+    {
+        parent::initialize();
+    }
 
     public function indexAction()
     {
@@ -19,6 +22,15 @@ class IndexController extends ControllerBase
             }
 
         }
+    }
+
+    public function changeLanguageAction($lang)
+    {
+
+
+        $this->session->set("lang", $lang);
+
+
 
     }
 

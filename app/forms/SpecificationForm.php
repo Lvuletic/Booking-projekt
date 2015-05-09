@@ -15,7 +15,7 @@ class SpecificationForm extends Form
     public function initialize()
     {
         $text = new Text("name");
-        $text->setLabel("Name");
+        $text->setLabel($this->translate->_("name"));
         $text->addValidator(new PresenceOf(array(
             'message' => 'Name is required'
         )));

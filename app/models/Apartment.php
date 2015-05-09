@@ -26,6 +26,8 @@ class Apartment extends \Phalcon\Mvc\Model
      * @var integer
      */
     protected $bathroom_number;
+    protected $rating;
+    protected $category;
 
 
     /**
@@ -80,6 +82,20 @@ class Apartment extends \Phalcon\Mvc\Model
         return $this;
     }
 
+    public function setRating($rating)
+    {
+        $this->rating = $rating;
+
+        return $this;
+    }
+
+    public function setCategory($category)
+    {
+        $this->category = $category;
+
+        return $this;
+    }
+
     /**
      * Returns the value of field code
      *
@@ -120,6 +136,16 @@ class Apartment extends \Phalcon\Mvc\Model
         return $this->bathroom_number;
     }
 
+    public function getRating()
+    {
+        return $this->rating;
+    }
+
+    public function getCategory()
+    {
+        return $this->category;
+    }
+
     /**
      * Independent Column Mapping.
      */
@@ -128,6 +154,8 @@ class Apartment extends \Phalcon\Mvc\Model
         return array(
             'code' => 'code', 
             'size' => 'size',
+            'rating' => 'rating',
+            'category' => 'category',
             'bedroom_number' => 'bedroom_number', 
             'bathroom_number' => 'bathroom_number'
         );
@@ -135,8 +163,6 @@ class Apartment extends \Phalcon\Mvc\Model
 
     public function initialize()
     {
-        $this->hasMany('code', 'UnitSpecification', 'apartment_code');
-
         $this->hasManyToMany(
             "code",
             "UnitSpecification",

@@ -18,7 +18,7 @@ class UserForm extends Form
     public function initialize()
     {
         $text = new Text("username");
-        $text->setLabel("Name");
+        $text->setLabel($this->translate->_("name"));
         $text->addValidator(new PresenceOf(array(
             'message' => 'Username is required'
         )));
@@ -26,7 +26,7 @@ class UserForm extends Form
         $this->add($text);
 
         $text2 = new Text("phone");
-        $text2->setLabel("Phone");
+        $text2->setLabel($this->translate->_("phone"));
         $text2->addValidator(new PresenceOf(array(
             'message' => 'Phone number is required'
         )));
@@ -45,7 +45,7 @@ class UserForm extends Form
         $this->add($text3);
 
         $password = new Password("password");
-        $password->setLabel("Password");
+        $password->setLabel($this->translate->_("password"));
         $password->addValidator(new PresenceOf(array(
             'message' => 'Password is required'
         )));

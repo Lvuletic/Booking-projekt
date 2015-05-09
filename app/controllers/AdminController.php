@@ -51,6 +51,20 @@ class AdminController extends ControllerBase
         $this->view->form = new SpecificationForm();
     }
 
+    public function languageAction()
+    {
+        $language = $this->session->get("lang");
+        $lang = Language::findFirst("name = '$language'");
+        $langWord = new LangWord();
+        $words = $langWord->findAll($lang->getCode());
+        $this->view->messages = $words;
+        foreach ($words as $row=>$item)
+        {
+            $name = $item->name;
+            $this->forms->set("form".$name, new LanguageForm($item));
+        }
+    }
+
     public function addAction($code)
     {
         $this->view->apartment = Apartment::findFirst($code);
@@ -132,7 +146,6 @@ class AdminController extends ControllerBase
             $name = $this->request->getPost("name");
             foreach ($specifications as $spec)
             {
-
                 if (strcmp($spec->getName(),$name) == 0)
                 {
                     $this->flash->error("Specification already exists");
@@ -141,6 +154,9 @@ class AdminController extends ControllerBase
             }
             $newSpec = new Specification();
             $newSpec->setName($name);
+            $keyword = new Keyword();
+            $keyword->setName($name);
+            $keyword->save();
             if ($newSpec->save() == false)
             {
                 foreach($newSpec->getMessages() as $message)
@@ -227,6 +243,34 @@ class AdminController extends ControllerBase
             $this->flash->success("Specification successfully removed");
             return $this->response->redirect("admin/apartment");
         }
+    }
+
+    public function changeLanguageAction()
+    {
+        try {
+            $manager = new Phalcon\Mvc\Model\Transaction\Manager;
+            $transaction = $manager->get();
+            $language = $this->session->get("lang");
+            $lang = Language::findFirst("name = '$language'");
+            $code = $lang->getCode();
+            $langWords = LangWord::find("language_code = '$code'");
+            foreach ($langWords as $word)
+            {
+                $word->setTransaction($transaction);
+                $value = $this->request->getPost("text".$word->getCode());
+                $word->setValue($value);
+                if ($word->save() == false) {
+                    $transaction->rollback();
+                }
+            }
+            $transaction->commit();
+            $this->flash->success("Language successfully updated");
+            return $this->dispatcher->forward(array("controller" => "admin", "action" => "language"));
+        } catch(Phalcon\Mvc\Model\Transaction\Failed $e)
+        {
+            echo 'Failed, reason: ', $e->getMessage();
+        }
 
     }
+
 }

@@ -78,23 +78,24 @@ Nullam felis risus, tincidunt in posuere fringilla, auctor eget ipsum.
 <div class="col-md-4">
 <h3> FEATURE LIST </h3>
 
-<p id="apartmentInfo" data-apartmentCode={{ apartmentCode }}>Apartment number: {{ apartmentCode }} <br>
-Size: {{ size }} <br>
-Bedrooms: {{ bedrooms }} <br>
-Bathrooms: {{ bathrooms }} <br>
-
+<p id="apartmentInfo" data-apartmentCode={{ apartmentCode }}><?php echo $t->_("unitNumber") ?>: {{ apartmentCode }} <br>
+<?php echo $t->_("size") ?>: {{ size }} <br>
+<?php echo $t->_("rating") ?>: {{ rating }} <br>
+<?php echo $t->_("category") ?>: {{ category }} <br>
+<?php echo $t->_("bedrooms") ?>: {{ bedrooms }} <br>
+<?php echo $t->_("bathrooms") ?>: {{ bathrooms }} <br>
 
 {% for spec in specifications %}
 {% if spec.unitSpecification.getApartmentCode() == apartmentCode %}
-{{ spec.specification.getName() }} - {{ spec.unitSpecification.getValue() }} <br>
+<?php echo $t->_($spec->specification->getName()) ?> - {{ spec.unitSpecification.getValue() }} <br>
 {% endif %}
 {% endfor %}
 
 
 {% if availability == true %}
-All dates are available for reservation
+<?php echo $t->_("datesFree") ?>
 {% else %}
-<button type="button" class="btn btn-info" onclick="checkDates()">Check available dates</button>
+<button type="button" class="btn btn-info" onclick="checkDates()"><?php echo $t->_("checkDates") ?></button>
 {% endif %}
 </p>
 <div id="dateCheck">
@@ -121,9 +122,9 @@ All dates are available for reservation
 </div>
 
 <div class="form-group">
-{{ submit_button("value": "Book this apartment", "class": "btn btn-primary") }}
+{{ submit_button("value": t._("bookThis"), "class": "btn btn-primary") }}
 
-<button type="button" class="btn btn-primary" onclick="priceCheck()">Calculate price</button>
+<button type="button" class="btn btn-primary" onclick="priceCheck()"><?php echo $t->_("checkPrice") ?></button>
 <div id="priceCheck"></div>
 </div>
 {{ flashSession.output() }}
@@ -134,8 +135,8 @@ All dates are available for reservation
 <h3> PRICE LISTING </h3>
 {% for row in seasonPrices %}
 For period from {{ row.season.getStartDate() }} to {{ row.season.getEndDate() }} <br>
-Two or more people per day: {{ row.pricelist.getPriceRoom() }} <br>
-One person per day: {{ row.pricelist.getPricePerson() }} <br> <br>
+<?php echo $t->_("onePerDay") ?>: {{ row.pricelist.getPricePerson() }} <br>
+<?php echo $t->_("morePerDay") ?>: {{ row.pricelist.getPriceRoom() }} <br> <br>
 {% endfor %}
 </div>
 

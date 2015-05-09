@@ -16,12 +16,12 @@ class UnitSpecificationForm extends Form
     public function initialize()
     {
         $select = new Select("specs", Specification::find(), array("size" => 1, "useEmpty" => true, "using" => array("code", "name")));
-        $select->setLabel("Specifications");
+        $select->setLabel($this->translate->_("specifications"));
 
         $this->add($select);
 
         $text = new Text("value");
-        $text->setLabel("Value");
+        $text->setLabel($this->translate->_("value"));
         $text->addValidator(new PresenceOf(array(
             'message' => 'Value is required'
         )));

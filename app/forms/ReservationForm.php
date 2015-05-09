@@ -16,12 +16,12 @@ class ReservationForm extends Form
     public function initialize()
     {
         $text = new Text("people");
-        $text->setLabel("Number of guests");
+        $text->setLabel($this->translate->_("guestNumber"));
 
         $this->add($text);
 
         $start_date = new Date("checkin");
-        $start_date->setLabel("Check-in date");
+        $start_date->setLabel($this->translate->_("checkInDate"));
         $start_date->addValidator(new PresenceOf(array(
             'message' => 'Check-in date is required'
         )));
@@ -29,7 +29,7 @@ class ReservationForm extends Form
         $this->add($start_date);
 
         $end_date = new Date("checkout");
-        $end_date->setLabel("Check-out date");
+        $end_date->setLabel($this->translate->_("checkOutDate"));
         $end_date->addValidator(new PresenceOf(array(
             'message' => 'Check-out date is required'
         )));
