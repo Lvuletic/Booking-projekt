@@ -14,6 +14,7 @@ class Language extends \Phalcon\Mvc\Model
      * @var string
      */
     protected $name;
+    protected $fullname;
 
     /**
      * Method to set the value of field code
@@ -41,6 +42,13 @@ class Language extends \Phalcon\Mvc\Model
         return $this;
     }
 
+    public function setFullname($fullname)
+    {
+        $this->fullname = $fullname;
+
+        return $this;
+    }
+
     /**
      * Returns the value of field code
      *
@@ -61,6 +69,11 @@ class Language extends \Phalcon\Mvc\Model
         return $this->name;
     }
 
+    public function getFullname()
+    {
+        return $this->fullname;
+    }
+
     /**
      * Independent Column Mapping.
      */
@@ -68,7 +81,8 @@ class Language extends \Phalcon\Mvc\Model
     {
         return array(
             'code' => 'code', 
-            'name' => 'name'
+            'name' => 'name',
+            'fullname' => 'fullname'
         );
     }
 

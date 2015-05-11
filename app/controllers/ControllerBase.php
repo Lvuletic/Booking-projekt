@@ -35,7 +35,7 @@ class ControllerBase extends Controller
         {
             //$this->dispatcher->setParam("language", "en");
             $this->session->set("lang", "en");
-            //$language = "en";
+            $language = "en";
         }
         $lang = Language::findFirst("name = '$language'");
         $langWord = new LangWord();

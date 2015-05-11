@@ -15,22 +15,22 @@ class ApartmentForm extends Form
     public function initialize()
     {
         $size = new Text("size");
-        $size->setLabel($this->translate->_("size"));
+        $size->setLabel("Size");
 
         $this->add($size);
 
         $rating = new Text("rating");
-        $rating->setLabel($this->translate->_("rating"));
+        $rating->setLabel("Rating");
 
         $this->add($rating);
 
         $category = new Text("category");
-        $category->setLabel($this->translate->_("category"));
+        $category->setLabel("Category");
 
         $this->add($category);
 
         $bedrooms = new Text("bedrooms");
-        $bedrooms->setLabel($this->translate->_("bedrooms"));
+        $bedrooms->setLabel("Bedrooms");
         $bedrooms->addValidator(new PresenceOf(array(
             'message' => 'Number of bedrooms is required'
         )));
@@ -38,7 +38,7 @@ class ApartmentForm extends Form
         $this->add($bedrooms);
 
         $bathrooms = new Text("bathrooms");
-        $bathrooms->setLabel($this->translate->_("bathrooms"));
+        $bathrooms->setLabel("Bathrooms");
         $bathrooms->addValidator(new PresenceOf(array(
             'message' => 'Number of bathrooms is required'
         )));

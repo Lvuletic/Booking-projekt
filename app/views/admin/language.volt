@@ -1,21 +1,33 @@
+
 {{ content() }}
-   {{ form("Admin/changeLanguage/", "class": "form-inline", "role": "form") }}
-{% for row in messages %}
+{% for item in languages %}
+{{ item.getFullname() }}
+<a class="btn btn-default" href="editLanguage/{{ item.getName() }}">Edit</a>
+<a class="btn btn-default" href="deleteLanguage/{{ item.getCode() }}">Delete</a>
+<br>
+{% endfor %}
+
+{{ form("Admin/createLanguage/", "class": "form", "role": "form") }}
+
+<br>
+
 <div class="row">
 
-    <div class="col-md-10">
-
     <div class="form-group">
-    {{ forms.get("form"~row.name).label("text"~row.langWord.getCode()) }}
-    {{ forms.get("form"~row.name).render("text"~row.langWord.getCode(), ["class": "form-control", "value" : row.langWord.getValue(), "placeholder": "Text"]) }}
+    {{ form.label("fullname") }}
+    {{ form.render("fullname", ["class": "form-control", "placeholder": "Full name of the language"]) }}
     </div>
 
+    <div class="form-group">
+    {{ form.label("name") }}
+    {{ form.render("name", ["class": "form-control", "placeholder": "Language abbrevation"]) }}
+    </div>
+
+    <div class="form-group">
+    {{ submit_button("value": "Add new language", "class": "btn btn-default") }}
+    </div>
 
     </div>
 </div>
 
-{% endfor %}
-  <div class="form-group">
-  {{ submit_button("value": "Save changes", "class": "btn btn-default") }}
-  </div>
 {{ endform() }}

@@ -17,9 +17,8 @@ class AdminController extends ControllerBase
     {
         $seasons = Season::find();
         $this->view->seasons = $seasons;
-        foreach ($seasons as $season)
-        {
-            $this->forms->set("form".$season->getCode(), new SeasonForm($season));
+        foreach ($seasons as $season) {
+            $this->forms->set("form" . $season->getCode(), new SeasonForm($season));
         }
         $this->view->form = new NewSeasonForm();
     }
@@ -31,19 +30,17 @@ class AdminController extends ControllerBase
         $unitSpec = new UnitSpecification();
         $allSpecs = $unitSpec->findSpecification();
         $this->view->specifications = $allSpecs;
-        foreach ($apartments as $unit)
-        {
+        foreach ($apartments as $unit) {
             $code = $unit->getCode();
             $this->forms->set("form" . $code, new ApartmentForm());
-            foreach ($allSpecs as $spec)
-            {
-                if ($spec->unitSpecification->getApartmentCode() == $unit->getCode())
-                {
+            foreach ($allSpecs as $spec) {
+                if ($spec->unitSpecification->getApartmentCode() == $unit->getCode()) {
                     $specCode = $spec->specification->getCode();
                     $this->forms->set("form" . $code . "Spec" . $specCode, new EditSpecificationForm($spec));
                 }
             }
         }
+        $this->view->form = new NewApartmentForm();
     }
 
     public function specificationAction()
@@ -51,13 +48,44 @@ class AdminController extends ControllerBase
         $this->view->form = new SpecificationForm();
     }
 
+    public function editApartmentAction($code)
+    {
+        $apartment = Apartment::findFirst($code);
+        $this->view->apartmentCode = $code;
+        $this->view->apartmentSize = $apartment->getSize();
+        $this->view->apartmentRating = $apartment->getRating();
+        $this->view->apartmentCategory = $apartment->getCategory();
+        $this->view->apartmentBedrooms = $apartment->getBedroomNumber();
+        $this->view->apartmentBathrooms = $apartment->getBathroomNumber();
+        $this->view->form = new ApartmentForm();
+
+        $unitSpec = new UnitSpecification();
+        $allSpecs = $unitSpec->findSpecification();
+        $this->view->specifications = $allSpecs;
+        foreach ($allSpecs as $spec) {
+            if ($spec->unitSpecification->getApartmentCode() == $code) {
+                $specCode = $spec->specification->getCode();
+                $this->forms->set("formSpec" . $specCode, new EditSpecificationForm($spec));
+            }
+        }
+        $this->view->formImage = new ImageForm();
+    }
+
     public function languageAction()
     {
-        $language = $this->session->get("lang");
-        $lang = Language::findFirst("name = '$language'");
+        $languages = Language::find();
+        $this->view->languages = $languages;
+        $this->view->form = new NewLanguageForm();
+    }
+
+    public function editLanguageAction($name)
+    {
+        $lang = Language::findFirst("name = '$name'");
         $langWord = new LangWord();
         $words = $langWord->findAll($lang->getCode());
         $this->view->messages = $words;
+        $this->view->langName = $name;
+        $this->view->langFullName = $lang->getFullname();
         foreach ($words as $row=>$item)
         {
             $name = $item->name;
@@ -157,6 +185,14 @@ class AdminController extends ControllerBase
             $keyword = new Keyword();
             $keyword->setName($name);
             $keyword->save();
+            $languages = Language::find();
+            foreach ($languages as $lang)
+            {
+                $langWord = new LangWord();
+                $langWord->setLanguageCode($lang->getCode());
+                $langWord->setKeywordCode($keyword->getCode());
+                $langWord->save();
+            }
             if ($newSpec->save() == false)
             {
                 foreach($newSpec->getMessages() as $message)
@@ -245,13 +281,39 @@ class AdminController extends ControllerBase
         }
     }
 
-    public function changeLanguageAction()
+    public function createApartmentAction()
+    {
+        if ($this->request->getPost()==true)
+        {
+            $apartment = new Apartment();
+            $apartment->setCode($this->request->getPost("number"));
+            $apartment->setSize($this->request->getPost("size"));
+            $apartment->setCategory($this->request->getPost("category"));
+            $apartment->setRating($this->request->getPost("rating"));
+            $apartment->setBedroomNumber($this->request->getPost("bedrooms"));
+            $apartment->setBathroomNumber($this->request->getPost("bathrooms"));
+            if ($apartment->save()==false)
+            {
+                foreach ($apartment->getMessages() as $message)
+                {
+                    $this->flash->error($message);
+                }
+            }
+            if (mkdir("img/".$this->request->getPost("number"))==false)
+            {
+                    $this->flash->error("Failed to create a folder");
+            }
+            $this->flash->success("Specification successfully removed");
+            return $this->response->redirect("admin/apartment");
+        }
+    }
+
+    public function changeLanguageAction($name)
     {
         try {
             $manager = new Phalcon\Mvc\Model\Transaction\Manager;
             $transaction = $manager->get();
-            $language = $this->session->get("lang");
-            $lang = Language::findFirst("name = '$language'");
+            $lang = Language::findFirst("name = '$name'");
             $code = $lang->getCode();
             $langWords = LangWord::find("language_code = '$code'");
             foreach ($langWords as $word)
@@ -265,12 +327,97 @@ class AdminController extends ControllerBase
             }
             $transaction->commit();
             $this->flash->success("Language successfully updated");
-            return $this->dispatcher->forward(array("controller" => "admin", "action" => "language"));
+            return $this->response->redirect("admin/editLanguage/".$name);
         } catch(Phalcon\Mvc\Model\Transaction\Failed $e)
         {
             echo 'Failed, reason: ', $e->getMessage();
         }
 
+    }
+
+    public function createLanguageAction()
+    {
+        try {
+            $manager = new Phalcon\Mvc\Model\Transaction\Manager;
+            $transaction = $manager->get();
+            $language = new Language();
+            $language->setTransaction($transaction);
+            $name = $this->request->getPost("name");
+            $fullname = $this->request->getPost("fullname");
+            $language->setName($name);
+            $language->setFullname($fullname);
+            $keywords = Keyword::find();
+            if ($language->save() == false) {
+                $transaction->rollback();
+            } else {
+                $transaction->commit();
+                $transaction->begin();
+            }
+            foreach ($keywords as $keyword) {
+                $langword = new LangWord();
+                $langword->setTransaction($transaction);
+                $langword->setKeywordCode($keyword->getCode());
+                $langword->setLanguageCode($language->getCode());
+                if ($langword->save() == false) {
+                    $transaction->rollback();
+                }
+            }
+            $transaction->commit();
+            $this->flash->success($fullname . " language successfully added");
+            return $this->response->redirect("admin/language");
+
+        } catch(Phalcon\Mvc\Model\Transaction\Failed $e)
+        {
+            echo 'Failed, reason: ', $e->getMessage();
+        }
+    }
+
+    public function deleteLanguageAction($code)
+    {
+        try {
+            $manager = new Phalcon\Mvc\Model\Transaction\Manager;
+            $transaction = $manager->get();
+            $language = Language::findFirst($code);
+            $language->setTransaction($transaction);
+            $fullname = $language->getFullname();
+            $langWords = LangWord::find("language_code = '$code'");
+            foreach ($langWords as $langWord) {
+                $langWord->setTransaction($transaction);
+                if ($langWord->delete()==false)
+                {
+                    $transaction->rollback();
+                } else {
+                    $transaction->commit();
+                    $transaction->begin();
+                }
+            }
+            if ($language->delete())
+            {
+                //$transaction->rollback();
+            }
+            $transaction->commit();
+            $this->flash->success($fullname . " language successfully deleted");
+            return $this->response->redirect("admin/language");
+        } catch(Phalcon\Mvc\Model\Transaction\Failed $e)
+        {
+            echo 'Failed, reason: ', $e->getMessage();
+        }
+    }
+
+    public function addImageAction($code)
+    {
+        if ($this->request->hasFiles()==true)
+        {
+            $image = $this->request->getUploadedFiles();
+            $picNumber = $this->request->getPost("number");
+            $picNumber++;
+            foreach ($image as $item)
+            {
+                $destination = "img/".$code;
+                $item->moveTo($destination."/"."picture".$picNumber.".jpg");
+            }
+
+        }
     }
 
 }
