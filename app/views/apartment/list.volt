@@ -1,4 +1,42 @@
 
+{{ form("Apartment/list/", "class": "form-inline", "role": "form") }}
+ <div class="row">
+        <div class="form-group">
+        {{ form.label("size") }}
+        {{ form.render("size", ["class": "form-control", "placeholder": "Size"]) }}
+        </div>
+        <div class="form-group">
+        {{ form.label("rating") }}
+        {{ form.render("rating", ["class": "form-control", "placeholder": "Rating"]) }}
+        </div>
+        <div class="form-group">
+        {{ form.label("category") }}
+        {{ form.render("category", ["class": "form-control", "placeholder": "Category"]) }}
+        </div>
+        <div class="form-group">
+        {{ form.label("bedrooms") }}
+        {{ form.render("bedrooms", ["class": "form-control", "placeholder": "Bedrooms"]) }}
+        </div>
+        <div class="form-group">
+        {{ form.label("bathrooms") }}
+        {{ form.render("bathrooms", ["class": "form-control", "placeholder": "Bathrooms"]) }}
+        </div>
+
+        {% for type in specFilter %}
+        <div class="form-group">
+        {{ forms.get("formFilter"~type.getCode()).label(type.getCode(), ["class": "col-sm-2"]) }}
+        <div class="col-sm-6">
+        {{ forms.get("formFilter"~type.getCode()).render(type.getCode(), ["class": "form-control", "placeholder": "Value"]) }}
+        </div>
+        </div>
+        {% endfor %}
+
+        <div class="form-group">
+        {{ submit_button("value": "Filter", "class": "btn btn-default") }}
+        </div>
+ </div>
+{{ endform() }}
+
 {% for item in list %}
 <div class="col-md-8">
   <img src="/booking/public/img/{{ item.getCode() }}/picture1.jpg" height="600" width="750">

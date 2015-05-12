@@ -8,6 +8,7 @@
 
 use Phalcon\Forms\Form;
 use Phalcon\Forms\Element\Text;
+use Phalcon\Forms\Element\Select;
 use Phalcon\Validation\Validator\PresenceOf;
 
 class NewApartmentForm extends Form
@@ -29,7 +30,7 @@ class NewApartmentForm extends Form
 
         $this->add($rating);
 
-        $category = new Text("category");
+        $category = new Select("category", array("A1", "A2", "A3", "A4", "A5", "S1", "S2", "S3"), array("size" => 1, "useEmpty" => true));
         $category->setLabel("Category");
 
         $this->add($category);

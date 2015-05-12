@@ -47,12 +47,66 @@ class ApartmentController extends ControllerBase
 
     public function listAction()
     {
-        $list = Apartment::find();
-        $this->view->list = $list;
-        $unitSpec = new UnitSpecification();
-        $allSpecs = $unitSpec->findSpecification();
-        $this->view->specifications = $allSpecs;
+        if ($this->request->isPost()==true)
+        {
+            $apartment = new Apartment();
+            $size = $this->request->getPost("size");
+            $rating = $this->request->getPost("rating");
+            $category = $this->request->getPost("category");
+            $bedrooms = $this->request->getPost("bedrooms");
+            $bathrooms = $this->request->getPost("bathrooms");
+            $list = $apartment->filter($size, $rating, $category, $bedrooms, $bathrooms);
+            $unitSpec = new UnitSpecification();
+            $specTypes = Specification::find();
+            /*$stuff = array();
+            foreach ($list as $unit)
+            {
+                foreach ($unitSpec as $type)
+                {
+                    if ($unit->getCode() == $type->unitSpecification->getApartmentCode())
+                    {
+                        $value = $this->request->getPost("value".$type->specification->getCode());
+                        if ($type->unitSpecification->getValue() == $value)
+                        {
+                            $stuff[$unit->getCode()] = $value;
 
+                        }
+
+                    }
+                }
+            }
+            $this->view->list = $stuff;*/
+            $this->view->list = $list;
+
+            $allSpecs = $unitSpec->findSpecification();
+            $this->view->specifications = $allSpecs;
+            $this->view->form = new FilterForm();
+
+            $this->view->specFilter = $specTypes;
+            foreach ($specTypes as $spec)
+            {
+                $specCode = $spec->getCode();
+                $this->forms->set("formFilter" . $specCode, new FilterSpecificationForm($spec));
+            }
+
+
+        } else {
+            $list = Apartment::find();
+            $this->view->list = $list;
+            $unitSpec = new UnitSpecification();
+            $allSpecs = $unitSpec->findSpecification();
+            $this->view->specifications = $allSpecs;
+            $this->view->form = new FilterForm();
+            $unitSpec = new UnitSpecification();
+            $allSpecs = $unitSpec->findSpecification();
+            $this->view->specifications = $allSpecs;
+            $specTypes = Specification::find();
+            $this->view->specFilter = $specTypes;
+            foreach ($specTypes as $spec)
+            {
+                $specCode = $spec->getCode();
+                $this->forms->set("formFilter" . $specCode, new FilterSpecificationForm($spec));
+            }
+        }
     }
-
 }

@@ -172,4 +172,38 @@ class Apartment extends \Phalcon\Mvc\Model
         );
     }
 
+    public function filter($size, $rating, $category, $bedrooms, $bathrooms)
+    {
+        $items = $this->getmodelsManager()->createBuilder()
+            ->columns("Apartment.*")
+            ->from("Apartment")
+            ->where("Apartment.size >= '$size'")
+            ->andWhere("Apartment.rating >= '$rating'")
+            ->andWhere("Apartment.category = '$category'")
+            ->andWhere("Apartment.bedroom_number >= '$bedrooms'")
+            ->andWhere("Apartment.bathroom_number >= '$bathrooms'")
+            ->getQuery()
+            ->execute();
+
+        return $items;
+    }
+
+   /* public function filterSpec($code, $specType)
+    {*/
+        /*$phql = "SELECT Apartment.*, Customer.username FROM Orders JOIN Customer ON Orders.customerId = Customer.id ORDER BY Orders.orderCode";
+        $query = $this->getModelsManager()->createQuery($phql);
+        return $items = $query->execute();*/
+/*
+        $items = $this->getmodelsManager()->createBuilder()
+            ->columns("Apartment.*")
+            ->from("Apartment")
+            ->where("UnitSpecification.apartment_code = :code", array("code" => $code))
+            ->andWhere("UnitSpecification.specification_code = :specType", array("specType" => $specType))
+            ->getQuery()
+            ->execute();
+
+        return $items;
+
+    }*/
+
 }

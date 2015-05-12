@@ -48,7 +48,6 @@ class ControllerBase extends Controller
         $translator = new Phalcon\Translate\Adapter\NativeArray(array(
             "content" => $messages
         ));
-        $this->view->dodo = $words;
         $this->view->setVar("t", $translator);
     }
 

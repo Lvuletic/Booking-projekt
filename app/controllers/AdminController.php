@@ -414,10 +414,9 @@ class AdminController extends ControllerBase
             foreach ($image as $item)
             {
                 $destination = "img/".$code;
-                $item->moveTo($destination."/"."picture".$picNumber.".jpg");
+                $item->moveTo($destination."/picture".$picNumber.".jpg");
             }
-
+            return $this->dispatcher->forward(array("controller" => "admin", "action" => "editApartment"));
         }
     }
-
 }
