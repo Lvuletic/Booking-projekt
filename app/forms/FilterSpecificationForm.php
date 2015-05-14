@@ -8,12 +8,13 @@
 
 use Phalcon\Forms\Form;
 use Phalcon\Forms\Element\Text;
+use Phalcon\Forms\Element\Check;
 
 class FilterSpecificationForm extends Form
 {
     public function initialize($spec)
     {
-        $text = new Text($spec->getCode());
+        $text = new Check($spec->getCode());
         $text->setLabel($spec->getName());
 
         $this->add($text);

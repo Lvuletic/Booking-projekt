@@ -172,28 +172,45 @@ class Apartment extends \Phalcon\Mvc\Model
         );
     }
 
-    public function filter($size, $rating, $category, $bedrooms, $bathrooms)
+    public function filter($size = 0, $rating = 0, $category, $bedrooms = 0, $bathrooms = 0)
     {
-        $items = $this->getmodelsManager()->createBuilder()
-            ->columns("Apartment.*")
-            ->from("Apartment")
-            ->where("Apartment.size >= '$size'")
-            ->andWhere("Apartment.rating >= '$rating'")
-            ->andWhere("Apartment.category = '$category'")
-            ->andWhere("Apartment.bedroom_number >= '$bedrooms'")
-            ->andWhere("Apartment.bathroom_number >= '$bathrooms'")
-            ->getQuery()
-            ->execute();
+        if ($category==null)
+        {
+            $items = $this->getmodelsManager()->createBuilder()
+                ->columns("Apartment.*")
+                ->from("Apartment")
+                ->where("Apartment.size >= '$size'")
+                ->andWhere("Apartment.rating >= '$rating'")
+                ->andWhere("Apartment.category LIKE '%'")
+                ->andWhere("Apartment.bedroom_number >= '$bedrooms'")
+                ->andWhere("Apartment.bathroom_number >= '$bathrooms'")
+                ->getQuery()
+                ->execute();
 
-        return $items;
+            return $items;
+        } else {
+
+            $items = $this->getmodelsManager()->createBuilder()
+                ->columns("Apartment.*")
+                ->from("Apartment")
+                ->where("Apartment.size >= '$size'")
+                ->andWhere("Apartment.rating >= '$rating'")
+                ->andWhere("Apartment.category = '$category'")
+                ->andWhere("Apartment.bedroom_number >= '$bedrooms'")
+                ->andWhere("Apartment.bathroom_number >= '$bathrooms'")
+                ->getQuery()
+                ->execute();
+
+            return $items;
+        }
     }
 
-   /* public function filterSpec($code, $specType)
-    {*/
+    public function filterSpec($code, $specType)
+    {
         /*$phql = "SELECT Apartment.*, Customer.username FROM Orders JOIN Customer ON Orders.customerId = Customer.id ORDER BY Orders.orderCode";
         $query = $this->getModelsManager()->createQuery($phql);
         return $items = $query->execute();*/
-/*
+
         $items = $this->getmodelsManager()->createBuilder()
             ->columns("Apartment.*")
             ->from("Apartment")
@@ -204,6 +221,6 @@ class Apartment extends \Phalcon\Mvc\Model
 
         return $items;
 
-    }*/
+    }
 
 }

@@ -58,37 +58,65 @@ class ApartmentController extends ControllerBase
             $list = $apartment->filter($size, $rating, $category, $bedrooms, $bathrooms);
             $unitSpec = new UnitSpecification();
             $specTypes = Specification::find();
-            /*$stuff = array();
-            foreach ($list as $unit)
+            $allSpecs = $unitSpec->findSpecification();
+            $bool = false;
+
+            foreach ($allSpecs as $type)
             {
-                foreach ($unitSpec as $type)
+                $value = $this->request->getPost($type->specification->getCode());
+                if ($value == "on")
                 {
-                    if ($unit->getCode() == $type->unitSpecification->getApartmentCode())
-                    {
-                        $value = $this->request->getPost("value".$type->specification->getCode());
-                        if ($type->unitSpecification->getValue() == $value)
-                        {
-                            $stuff[$unit->getCode()] = $value;
-
-                        }
-
-                    }
+                    $bool = true;
                 }
             }
-            $this->view->list = $stuff;*/
-            $this->view->list = $list;
 
-            $allSpecs = $unitSpec->findSpecification();
-            $this->view->specifications = $allSpecs;
-            $this->view->form = new FilterForm();
-
-            $this->view->specFilter = $specTypes;
-            foreach ($specTypes as $spec)
+            if ($bool == true)
             {
-                $specCode = $spec->getCode();
-                $this->forms->set("formFilter" . $specCode, new FilterSpecificationForm($spec));
-            }
+                $items = array();
+                foreach ($list as $unit)
+                {
+                    foreach ($allSpecs as $type)
+                    {
+                        if ($unit->getCode() == $type->unitSpecification->getApartmentCode())
+                        {
+                            $value = $this->request->getPost($type->specification->getCode());
+                            if (($value == "on") && ($type->unitSpecification->getSpecificationCode() == $type->specification->getCode()))
+                            {
+                                $items[$unit->getCode()]["code"] = $unit->getCode();
+                                $items[$unit->getCode()]["size"] = $unit->getSize();
+                                $items[$unit->getCode()]["rating"] = $unit->getRating();
+                                $items[$unit->getCode()]["category"] = $unit->getCategory();
+                                $items[$unit->getCode()]["bedrooms"] = $unit->getBedroomNumber();
+                                $items[$unit->getCode()]["bathrooms"] = $unit->getBathroomNumber();
 
+                            }
+
+                        }
+                    }
+                }
+                $this->view->list = $items;
+                $this->view->specifications = $allSpecs;
+                $this->view->form = new FilterForm();
+
+                $this->view->specFilter = $specTypes;
+                foreach ($specTypes as $spec)
+                {
+                    $specCode = $spec->getCode();
+                    $this->forms->set("formFilter" . $specCode, new FilterSpecificationForm($spec));
+                }
+                $this->view->pick("apartment/listFilter");
+            } else {
+                $this->view->list = $list;
+                $this->view->specifications = $allSpecs;
+                $this->view->form = new FilterForm();
+
+                $this->view->specFilter = $specTypes;
+                foreach ($specTypes as $spec)
+                {
+                    $specCode = $spec->getCode();
+                    $this->forms->set("formFilter" . $specCode, new FilterSpecificationForm($spec));
+                }
+            }
 
         } else {
             $list = Apartment::find();
