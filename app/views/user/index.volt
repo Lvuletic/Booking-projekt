@@ -1,6 +1,6 @@
 {{ content() }}
 
-{{ form("user/register", "role": "form") }}
+{{ form(this.dispatcher.getParam("language")~"/user/register", "role": "form") }}
 <div class="form-group">
 {{ form.label("username") }}
 {{ form.render("username", ["class": "form-control", "placeholder": "Username"]) }}

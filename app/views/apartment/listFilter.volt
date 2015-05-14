@@ -37,7 +37,10 @@
  </div>
 {{ endform() }}
 
-
+<?php if (count($list) == 0)
+{
+echo $t->_("searchEmpty");
+}?>
 
 <?php foreach ($list as $unit=>$key)
 {

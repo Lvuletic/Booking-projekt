@@ -145,4 +145,17 @@ class Pricelist extends \Phalcon\Mvc\Model
         return $items;
     }
 
+    public function pricesByUnit($code)
+    {
+        $items = $this->getmodelsManager()->createBuilder()
+            ->columns(array("Pricelist.*"))
+            ->from("Pricelist")
+            ->where("Pricelist.apartment_code = '$code'")
+            ->orderBy("Pricelist.season_code")
+            ->getQuery()
+            ->execute();
+
+        return $items;
+    }
+
 }

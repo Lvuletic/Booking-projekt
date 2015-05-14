@@ -1,6 +1,6 @@
 {{ content() }}
 
-{{ form("login/login", "role": "form") }}
+{{ form(this.dispatcher.getParam("language")~"/login/login", "role": "form") }}
 
 <div class="form-group">
 {{ form.label("usermail") }}

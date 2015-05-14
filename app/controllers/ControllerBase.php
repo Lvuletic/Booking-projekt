@@ -13,6 +13,8 @@ class ControllerBase extends Controller
             ->addJs("js/carousel.js")
             ->addJs("js/apartment.js")
             ->addJs("js/admin.js")
+            ->addJs("https://maps.googleapis.com/maps/api/js")
+            ->addJs("js/google.js")
             ->addJs("js/bootstrap.js");
         $this->assets
             ->addCss("css/jquery-ui.min.css")
@@ -20,22 +22,25 @@ class ControllerBase extends Controller
             ->addCss("css/bootstrap-theme.css")
             ->addCss("css/bootstrap.css.map")
             //->addCss("css/carousel.css")
+            ->addCss("css/admin.css")
             ->addCss("css/bootstrap-theme.css.map");
 
         $this->tag->setDoctype(\Phalcon\Tag::HTML5);
         $this->loadTranslation();
+        $languages = Language::find();
+        $this->view->languages = $languages;
 
     }
 
     public function loadTranslation()
     {
-        $language = $this->session->get("lang");
-        //$language = $this->dispatcher->getParam("language");
+        //$language = $this->session->get("lang");
+        $language = $this->dispatcher->getParam("language");
         if (!$language)
         {
-            //$this->dispatcher->setParam("language", "en");
-            $this->session->set("lang", "en");
-            $language = "en";
+            $this->dispatcher->setParam("language", "gb");
+            //$this->session->set("lang", "gb");
+            $language = "gb";
         }
         $lang = Language::findFirst("name = '$language'");
         $langWord = new LangWord();

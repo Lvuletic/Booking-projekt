@@ -158,14 +158,15 @@ $di->set('modelsCache', function() {
 });
 
 $di->setShared('translate', function() use($di) {
-    $session = $di->getShared("session");
-    $language = $session->get("lang");
-    //$language = $this->dispatcher->getParam("language");
+    //$session = $di->getShared("session");
+    //$language = $session->get("lang");
+    $dispatcher = $di->getShared("dispatcher");
+    $language = $dispatcher->getParam("language");
     if (!$language)
     {
-        //$this->dispatcher->setParam("language", "en");
-        $session->set("lang", "en");
-        //$language = "en";
+        $this->dispatcher->setParam("language", "gb");
+        //$session->set("lang", "en");
+        $language = "gb";
     }
     $lang = Language::findFirst("name = '$language'");
     $langWord = new LangWord();

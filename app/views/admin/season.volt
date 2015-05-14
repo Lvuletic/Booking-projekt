@@ -2,7 +2,6 @@
    {{ form("Admin/saveSeason/", "class": "form-inline", "role": "form") }}
 {% for row in seasons %}
 
-
 <div class="row">
     <div class="col-md-2">
         Season {{ row.getName() }}
@@ -36,7 +35,7 @@
 <br>
 
 {{ form("Admin/createSeason/", "class": "form-inline", "role": "form") }}
- <div class="seasonDates">
+    <div class="seasonDates">
         <div class="form-group">
         {{ form.label("name") }}
         {{ form.render("name", ["class": "form-control", "id": "name", "placeholder": "Season name"]) }}

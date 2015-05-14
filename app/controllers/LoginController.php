@@ -34,25 +34,31 @@ class LoginController extends ControllerBase
                         "id" => $user->getId(),
                         "username" => $user->getName()
                     ));*/
-                    $this->flash->success("Welcome". $user->getName());
+                    $this->flash->success($this->translate->_("logingreet") ." ". $user->getName());
                 } else {
-                    $this->flash->error("There was a login error");
+                    $this->flash->error($this->translate->_("loginerror"));
                     return $this->dispatcher->forward(array(
                         "action" => "index"
                     ));
                 }
         }
-        return $this->dispatcher->forward(array(
-            "controller" => "index",
-            "action" => "index"
-        ));
+        $lang = $this->dispatcher->getParam("language");
+        if ($this->session->get("user_id") == 1)
+        {
+            return $this->response->redirect("/admin/index");
+        }
+        else {
+            return $this->response->redirect($lang."/index/index");
+        }
+
     }
 
     public function logoutAction()
     {
         $this->session->remove("user_id");
-        $this->flashSession->success("Logout successfull");
-        return $this->response->redirect("index/index");
+        $this->flashSession->success($this->translate->_("logout"));
+        $lang = $this->dispatcher->getParam("language");
+        return $this->response->redirect($lang."/index/index");
     }
 
     public function testLogin($username, $password)

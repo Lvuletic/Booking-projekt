@@ -8,6 +8,12 @@
 
 class ReservationController extends ControllerBase
 {
+
+    public function initialize()
+    {
+        parent::initialize();
+    }
+
     public function indexAction($code)
     {
         if ($this->request->isPost() == true)
@@ -31,11 +37,11 @@ class ReservationController extends ControllerBase
                             return $this->dispatcher->forward(array("controller" => "apartment", "action" => "index", "param" => $code));
                         }
                     } else {
-                        $this->flash->success("Reservation successful");
+                        $this->flash->success($this->translate->_("reservationSuccess"));
                         return $this->dispatcher->forward(array("controller" => "apartment", "action" => "index", "param" => $code));
                     }
                 } else {
-                    $this->flash->error("The chosen period is not available for reservation, please choose another one");
+                    $this->flash->error($this->translate->_("reservationFail"));
                     return $this->dispatcher->forward(array("controller" => "apartment", "action" => "index", "param" => $code));
                 }
             } else {

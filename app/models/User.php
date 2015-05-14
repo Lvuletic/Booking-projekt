@@ -194,4 +194,12 @@ class User extends \Phalcon\Mvc\Model
         return $user;
     }
 
+    public function updateUser($customer, $phone, $email, $password)
+    {
+        $customer->setPhone($phone);
+        $customer->setEmail($email);
+        $customer->setPassword($password);
+        return $customer;
+    }
+
 }

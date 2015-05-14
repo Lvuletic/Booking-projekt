@@ -70,3 +70,7 @@ Cras id tempor dolor, sed cursus elit. Pellentesque habitant morbi tristique sen
 Proin volutpat sapien non sem porta faucibus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
 Nullam felis risus, tincidunt in posuere fringilla, auctor eget ipsum.
 </p>
+
+<div id="divMap">
+</div>
+

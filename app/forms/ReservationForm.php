@@ -9,13 +9,14 @@
 use Phalcon\Forms\Form;
 use Phalcon\Forms\Element\Text;
 use Phalcon\Forms\Element\Date;
+use Phalcon\Forms\Element\Select;
 use Phalcon\Validation\Validator\PresenceOf;
 
 class ReservationForm extends Form
 {
     public function initialize()
     {
-        $text = new Text("people");
+        $text = new Select("people", array(1,2,3,4,5,6), array("size" => 1));
         $text->setLabel($this->translate->_("guestNumber"));
 
         $this->add($text);

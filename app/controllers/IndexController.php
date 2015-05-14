@@ -26,12 +26,10 @@ class IndexController extends ControllerBase
 
     public function changeLanguageAction($lang)
     {
-
-
-        $this->session->set("lang", $lang);
-
-
-
+        $this->response->redirect(array(
+            "for" => "homepage",
+            "language" => $lang
+        ),null);
     }
 
 }

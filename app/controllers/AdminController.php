@@ -8,6 +8,12 @@
 
 class AdminController extends ControllerBase
 {
+
+    public function initialize()
+    {
+        parent::initialize();
+    }
+
     public function indexAction()
     {
 
@@ -68,6 +74,15 @@ class AdminController extends ControllerBase
                 $this->forms->set("formSpec" . $specCode, new EditSpecificationForm($spec));
             }
         }
+        $seasons = Season::find();
+        foreach ($seasons as $season)
+        {
+            $seasonCode = $season->getCode();
+            $this->forms->set("formPrice" . $seasonCode, new PriceForm($season));
+        }
+        $priceList = new Pricelist();
+        $prices = $priceList->pricesBySeason($code);
+        $this->view->prices = $prices;
         $this->view->formImage = new ImageForm();
     }
 
@@ -76,6 +91,12 @@ class AdminController extends ControllerBase
         $languages = Language::find();
         $this->view->languages = $languages;
         $this->view->form = new NewLanguageForm();
+        /*foreach ($languages as $lang)
+        {
+            $langCode = $lang->getCode();
+            $this->forms->set("formImage".$langCode, new LangImageForm($lang));
+        }*/
+        $this->forms->set("formImage", new LangImageForm());
     }
 
     public function editLanguageAction($name)
@@ -162,6 +183,35 @@ class AdminController extends ControllerBase
         } catch(Phalcon\Mvc\Model\Transaction\Failed $e)
         {
             echo 'Failed, reason: ', $e->getMessage();
+        }
+    }
+
+    public function savePriceAction($code)
+    {
+        if ($this->request->isPost()==true)
+        {
+            try {
+                $manager = new Phalcon\Mvc\Model\Transaction\Manager;
+                $transaction = $manager->get();
+                $priceList = new Pricelist();
+                $prices = $priceList->pricesByUnit($code);
+                foreach ($prices as $price)
+                {
+                    $price->setTransaction($transaction);
+                    $price->setPricePerson($this->request->getPost("priceOne".$price->getSeasonCode()));
+                    $price->setPriceRoom($this->request->getPost("priceRoom".$price->getSeasonCode()));
+                    if ($price->save() == false)
+                    {
+                        $transaction->rollback();
+                    }
+                }
+                $transaction->commit();
+                $this->flash->success("Apartment successfully updated");
+                return $this->dispatcher->forward(array("controller" => "admin", "action" => "editApartment", "parameter" => $code));
+            } catch(Phalcon\Mvc\Model\Transaction\Failed $e)
+            {
+                echo 'Failed, reason: ', $e->getMessage();
+            }
         }
 
     }
@@ -418,5 +468,22 @@ class AdminController extends ControllerBase
             }
             return $this->dispatcher->forward(array("controller" => "admin", "action" => "editApartment"));
         }
+    }
+
+    public function saveLangImageAction($code)
+    {
+        if ($this->request->hasFiles()==true)
+        {
+            $image = $this->request->getUploadedFiles();
+            $language = Language::findFirst($code);
+            $name = $language->getName();
+            foreach ($image as $item)
+            {
+                $destination = "img/flags";
+                $item->moveTo($destination."/".$name.".gif");
+            }
+            return $this->dispatcher->forward(array("controller" => "admin", "action" => "language"));
+        }
+
     }
 }

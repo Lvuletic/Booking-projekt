@@ -228,6 +228,7 @@ class Reservation extends \Phalcon\Mvc\Model
         //$diff = $formatStart->diff($formatEnd);
         //$days = $diff->format("%a");
         $price = 0;
+        $people++;
         foreach ($seasons as $season)
         {
             foreach ($daterange as $date)

@@ -104,7 +104,7 @@ Nullam felis risus, tincidunt in posuere fringilla, auctor eget ipsum.
 </div>
 
 <div class="col-md-6">
-{{ form("reservation/index/"~apartmentCode, "onsubmit": "return validateForm()", "role": "form") }}
+{{ form(this.dispatcher.getParam("language")~"/reservation/index/"~apartmentCode, "onsubmit": "return validateForm()", "role": "form") }}
 
 <div class="form-group">
 {{ form.label("checkin") }}

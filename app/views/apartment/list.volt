@@ -1,5 +1,5 @@
-
-{{ form("Apartment/list/", "class": "form-inline", "role": "form") }}
+<div>
+{{ form(this.dispatcher.getParam("language")~"/Apartment/list/", "class": "form-inline", "role": "form") }}
  <div class="row">
         <div class="form-group">
         {{ form.label("size") }}
@@ -36,9 +36,9 @@
         </div>
  </div>
 {{ endform() }}
-
+</div>
 {% if list.count() == 0 %}
-Your search has not matched any results.
+{{ t._("searchEmpty") }}
 {% endif %}
 
 {% for item in list %}
@@ -62,7 +62,8 @@ Your search has not matched any results.
 {% endif %}
 {% endfor %}
 
-<a class="btn btn-primary" href="index/{{ item.getCode() }}"><?php echo $t->_("bookThis") ?></a>
+
+<a class="btn btn-primary" href="apartment/index/{{ item.getCode() }}"><?php echo $t->_("bookThis") ?></a>
 </p>
 </div>
 

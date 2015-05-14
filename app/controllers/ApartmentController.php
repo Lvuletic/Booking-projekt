@@ -41,8 +41,6 @@ class ApartmentController extends ControllerBase
         $allSpecs = $unitSpec->findSpecification();
         $this->view->specifications = $allSpecs;
 
-
-
     }
 
     public function listAction()

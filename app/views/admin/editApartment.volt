@@ -56,7 +56,32 @@
          </div>
     </div>
 </div>
+{{ endform() }}
 
+{{ form("Admin/savePrice/"~apartmentCode, "class": "form-horizontal", "role": "form") }}
+{% for row in prices %}
+<div class="row">
+<div class="col-md-1">
+        Season {{ row.season.getName() }}
+    </div>
+     <div class="col-md-11">
+         <div class="form-group">
+         {{ forms.get("formPrice"~row.pricelist.getSeasonCode()).label("priceOne"~row.pricelist.getSeasonCode(), ["class": "col-sm-2"]) }}
+         <div class="col-sm-6">
+         {{ forms.get("formPrice"~row.pricelist.getSeasonCode()).render("priceOne"~row.pricelist.getSeasonCode(), ["class": "form-control", "value": row.pricelist.getPricePerson(), "placeholder": "Price for one"]) }}
+         </div> </div>
+         <div class="form-group">
+         {{ forms.get("formPrice"~row.pricelist.getSeasonCode()).label("priceRoom"~row.pricelist.getSeasonCode(), ["class": "col-sm-2"]) }}
+         <div class="col-sm-6">
+         {{ forms.get("formPrice"~row.pricelist.getSeasonCode()).render("priceRoom"~row.pricelist.getSeasonCode(), ["class": "form-control", "value": row.pricelist.getPriceRoom(), "placeholder": "Price for more"]) }}
+         </div> </div>
+     </div>
+     </div>
+
+{% endfor %}
+<div class="form-group">
+        {{ submit_button("value": "Save prices", "class": "btn btn-default") }}
+         </div>
 {{ endform() }}
 
 {{ form("Admin/addImage/"~apartmentCode, "class": "form-inline", "enctype": "multipart/form-data", "role": "form") }}
