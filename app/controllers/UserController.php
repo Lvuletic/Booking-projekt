@@ -101,4 +101,21 @@ class UserController extends ControllerBase
             }
         }
     }
+
+    public function reservationsAction()
+    {
+        $userCode = $this->session->get("user_id");
+        $reservation = new Reservation();
+        $reservations = $reservation->findByUser($userCode);
+        $this->view->reservations = $reservations;
+    }
+
+    public function editBookingAction($code)
+    {
+        $reservation = Reservation::findFirst($code);
+        $this->view->form = new ReservationForm();
+        $this->view->apartmentCode = $reservation->getApartmentCode();
+        $this->view->reservation = $reservation;
+
+    }
 }

@@ -1,5 +1,5 @@
 {{ content() }}
-   {{ form("Admin/changeLanguage/"~langName, "class": "form-inline", "role": "form") }}
+   {{ form("admin/changeLanguage/"~langName, "class": "form-inline", "role": "form") }}
    {{ langFullName }}
 {% for row in messages %}
 <div class="row">

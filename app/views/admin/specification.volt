@@ -1,5 +1,5 @@
 {{ content() }}
-{{ form("Admin/createSpecification/", "class": "form-inline", "role": "form") }}
+{{ form("admin/createSpecification/", "class": "form-inline", "role": "form") }}
 <div class="row">
 
     <div class="col-md-11">

@@ -80,7 +80,7 @@ $di->set('session', function () {
 
     return $session;
 });
-/*
+
 $di->set('dispatcher', function () use ($di) {
     $eventsManager = $di->getShared('eventsManager');
     $security = new Security();
@@ -89,7 +89,7 @@ $di->set('dispatcher', function () use ($di) {
     $dispatcher->setEventsManager($eventsManager);
     return $dispatcher;
 });
-*/
+
 $di->set('modelsManager', function () {
     $manager = new Manager;
     return $manager;
@@ -164,7 +164,7 @@ $di->setShared('translate', function() use($di) {
     $language = $dispatcher->getParam("language");
     if (!$language)
     {
-        $this->dispatcher->setParam("language", "gb");
+        $dispatcher->setParam("language", "gb");
         //$session->set("lang", "en");
         $language = "gb";
     }

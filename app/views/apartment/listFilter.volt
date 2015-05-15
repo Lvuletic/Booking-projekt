@@ -1,5 +1,5 @@
-
-{{ form("Apartment/list/", "class": "form-inline", "role": "form") }}
+<div>
+{{ form("apartment/list/", "class": "form-inline", "role": "form") }}
  <div class="row">
         <div class="form-group">
         {{ form.label("size") }}
@@ -24,9 +24,9 @@
 
         {% for type in specFilter %}
         <div class="form-group">
-        {{ forms.get("formFilter"~type.getCode()).label(type.getCode(), ["class": "col-sm-2"]) }}
+        {{ forms.get("formFilter"~type.getCode()).label(type.getCode(), ["class": "checkbox"]) }}
         <div class="col-sm-6">
-        {{ forms.get("formFilter"~type.getCode()).render(type.getCode(), ["class": "form-control", "placeholder": "Value"]) }}
+        {{ forms.get("formFilter"~type.getCode()).render(type.getCode(), ["class": "checkbox"]) }}
         </div>
         </div>
         {% endfor %}
@@ -36,11 +36,14 @@
         </div>
  </div>
 {{ endform() }}
-
+</div>
 <?php if (count($list) == 0)
 {
 echo $t->_("searchEmpty");
 }?>
+
+<br>
+<br>
 
 <?php foreach ($list as $unit=>$key)
 {

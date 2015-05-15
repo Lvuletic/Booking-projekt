@@ -159,9 +159,13 @@ class AdminController extends ControllerBase
             $size = $this->request->getPost("size");
             $bedrooms = $this->request->getPost("bedrooms");
             $bathrooms = $this->request->getPost("bathrooms");
+            $rating = $this->request->getPost("rating");
+            $category = $this->request->getPost("category");
             $apartment->setSize($size);
             $apartment->setBedroomNumber($bedrooms);
             $apartment->setBathroomNumber($bathrooms);
+            $apartment->setRating($rating);
+            $apartment->setCategory($category);
             $unitSpecs = UnitSpecification::find("apartment_code = '$code'");
             foreach ($unitSpecs as $spec)
             {
@@ -336,18 +340,29 @@ class AdminController extends ControllerBase
         if ($this->request->getPost()==true)
         {
             $apartment = new Apartment();
-            $apartment->setCode($this->request->getPost("number"));
-            $apartment->setSize($this->request->getPost("size"));
-            $apartment->setCategory($this->request->getPost("category"));
-            $apartment->setRating($this->request->getPost("rating"));
-            $apartment->setBedroomNumber($this->request->getPost("bedrooms"));
-            $apartment->setBathroomNumber($this->request->getPost("bathrooms"));
+            $code = $this->request->getPost("number");
+            $size = $this->request->getPost("size");
+            $category = $this->request->getPost("category");
+            $rating = $this->request->getPost("rating");
+            $bedrooms = $this->request->getPost("bedrooms");
+            $bathrooms = $this->request->getPost("bathrooms");
+            $apartment = $apartment->createNew($apartment, $code, $size, $rating, $category, $bedrooms, $bathrooms);
             if ($apartment->save()==false)
             {
                 foreach ($apartment->getMessages() as $message)
                 {
                     $this->flash->error($message);
                 }
+            }
+            $seasons = Season::find();
+            foreach ($seasons as $season)
+            {
+                $unitPrice = new Pricelist();
+                $unitPrice->setApartmentCode($code);
+                $unitPrice->setSeasonCode($season->getCode());
+                $unitPrice->setPricePerson(0);
+                $unitPrice->setPriceRoom(0);
+                $unitPrice->save();
             }
             if (mkdir("img/".$this->request->getPost("number"))==false)
             {

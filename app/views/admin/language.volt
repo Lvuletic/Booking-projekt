@@ -4,7 +4,7 @@
 {{ item.getFullname() }}
 <a class="btn btn-default" href="editLanguage/{{ item.getName() }}">Edit</a>
 <a class="btn btn-default" href="deleteLanguage/{{ item.getCode() }}">Delete</a>
-{{ form("Admin/saveLangImage/"~item.getCode(), "class": "form", "enctype": "multipart/form-data", "role": "form") }}
+{{ form("admin/saveLangImage/"~item.getCode(), "class": "form", "enctype": "multipart/form-data", "role": "form") }}
 <div class="form-group">
       {{ forms.get("formImage").label("imageA", ["class": "col-md-2"]) }}
       {{ forms.get("formImage").render("imageA", ["class": "col-md-2"]) }}
@@ -17,7 +17,7 @@
 <br>
 {% endfor %}
 
-{{ form("Admin/createLanguage/", "class": "form", "role": "form") }}
+{{ form("admin/createLanguage/", "class": "form", "role": "form") }}
 
 <br>
 

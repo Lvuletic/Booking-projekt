@@ -1,5 +1,5 @@
 {{ content() }}
-   {{ form("Admin/saveSeason/", "class": "form-inline", "role": "form") }}
+   {{ form("admin/saveSeason/", "class": "form-inline", "role": "form") }}
 {% for row in seasons %}
 
 <div class="row">
@@ -34,7 +34,7 @@
 <br>
 <br>
 
-{{ form("Admin/createSeason/", "class": "form-inline", "role": "form") }}
+{{ form("admin/createSeason/", "class": "form-inline", "role": "form") }}
     <div class="seasonDates">
         <div class="form-group">
         {{ form.label("name") }}

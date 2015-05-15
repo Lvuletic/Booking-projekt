@@ -1,5 +1,5 @@
 <div>
-{{ form(this.dispatcher.getParam("language")~"/Apartment/list/", "class": "form-inline", "role": "form") }}
+{{ form(this.dispatcher.getParam("language")~"/apartment/list/", "class": "form-inline", "role": "form") }}
  <div class="row">
         <div class="form-group">
         {{ form.label("size") }}
@@ -24,9 +24,9 @@
 
         {% for type in specFilter %}
         <div class="form-group">
-        {{ forms.get("formFilter"~type.getCode()).label(type.getCode(), ["class": "col-sm-2"]) }}
+        {{ forms.get("formFilter"~type.getCode()).label(type.getCode(), ["class": "checkbox"]) }}
         <div class="col-sm-6">
-        {{ forms.get("formFilter"~type.getCode()).render(type.getCode(), ["class": "form-control", "placeholder": "Value"]) }}
+        {{ forms.get("formFilter"~type.getCode()).render(type.getCode(), ["class": "checkbox"]) }}
         </div>
         </div>
         {% endfor %}
@@ -40,6 +40,9 @@
 {% if list.count() == 0 %}
 {{ t._("searchEmpty") }}
 {% endif %}
+
+<br>
+<br>
 
 {% for item in list %}
 <div class="col-md-8">

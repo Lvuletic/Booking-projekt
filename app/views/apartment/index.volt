@@ -123,7 +123,7 @@ Nullam felis risus, tincidunt in posuere fringilla, auctor eget ipsum.
 
 <div class="form-group">
 {{ submit_button("value": t._("bookThis"), "class": "btn btn-primary") }}
-
+{{ endform() }}
 <button type="button" class="btn btn-primary" onclick="priceCheck()"><?php echo $t->_("checkPrice") ?></button>
 <div id="priceCheck"></div>
 </div>

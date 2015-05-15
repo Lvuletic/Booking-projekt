@@ -59,5 +59,10 @@ $router->add("/{language:[a-z]{2}+}/admin", array(
     "action" => "index"
 ))->setName("account");
 
+$router->add("/{language:[a-z]{2}+}/yourReservation", array(
+    "controller" => "user",
+    "action" => "reservations"
+))->setName("yourReservation");
+
 
 return $router;

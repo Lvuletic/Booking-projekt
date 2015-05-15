@@ -172,6 +172,17 @@ class Apartment extends \Phalcon\Mvc\Model
         );
     }
 
+    public function createNew($apartment, $code, $size, $rating, $category, $bedrooms, $bathrooms)
+    {
+        $apartment->setCode($code);
+        $apartment->setSize($size);
+        $apartment->setCategory($category);
+        $apartment->setRating($rating);
+        $apartment->setBedroomNumber($bedrooms);
+        $apartment->setBathroomNumber($bathrooms);
+        return $apartment;
+    }
+
     public function filter($size = 0, $rating = 0, $category, $bedrooms = 0, $bathrooms = 0)
     {
         if ($category==null)
@@ -220,7 +231,6 @@ class Apartment extends \Phalcon\Mvc\Model
             ->execute();
 
         return $items;
-
     }
 
 }

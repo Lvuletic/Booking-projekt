@@ -28,12 +28,8 @@ class LoginController extends ControllerBase
                 if ($user && $this->security->checkHash($password, $user->getPassword()))
                 {
                     $this->session->set("user_id", $user->getId());
-                    /*$this->session->set("username", $user->getName());
+                    $this->session->set("username", $user->getName());
                     $this->cookies->set("user_id", $user->getId());
-                    $this->session->set("auth", array(
-                        "id" => $user->getId(),
-                        "username" => $user->getName()
-                    ));*/
                     $this->flash->success($this->translate->_("logingreet") ." ". $user->getName());
                 } else {
                     $this->flash->error($this->translate->_("loginerror"));

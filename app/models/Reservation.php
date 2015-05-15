@@ -3,6 +3,7 @@
 class Reservation extends \Phalcon\Mvc\Model
 {
 
+    protected $reservation_code;
     /**
      *
      * @var string
@@ -33,6 +34,13 @@ class Reservation extends \Phalcon\Mvc\Model
      */
     protected $customer_code;
     protected $total_price;
+
+    public function setReservationCode($reservation_code)
+    {
+        $this->reservation_code = $reservation_code;
+
+        return $this;
+    }
 
     /**
      * Method to set the value of field start_date
@@ -106,6 +114,11 @@ class Reservation extends \Phalcon\Mvc\Model
         return $this;
     }
 
+    public function getReservationCode()
+    {
+        return $this->reservation_code;
+    }
+
     /**
      * Returns the value of field start_date
      *
@@ -167,6 +180,7 @@ class Reservation extends \Phalcon\Mvc\Model
     public function columnMap()
     {
         return array(
+            'reservation_code' => 'reservation_code',
             'start_date' => 'start_date',
             'end_date' => 'end_date',
             'people' => 'people',
@@ -193,6 +207,15 @@ class Reservation extends \Phalcon\Mvc\Model
         return $reservation;
     }
 
+    public function edit($reservation, $checkin, $checkout, $people, $totalPrice)
+    {
+        $reservation->setStartDate($checkin);
+        $reservation->setEndDate($checkout);
+        $reservation->setPeople($people);
+        $reservation->setTotalPrice($totalPrice);
+        return $reservation;
+    }
+
     public function checkDates($code, $checkin, $checkout)
     {
         $reservations = $this->getmodelsManager()->createBuilder()
@@ -215,7 +238,33 @@ class Reservation extends \Phalcon\Mvc\Model
             }
         }
         return $result;
+    }
 
+    public function checkEditDates($unitCode, $checkin, $checkout, $reservationCode)
+    {
+        $reservations = $this->getmodelsManager()->createBuilder()
+            ->columns("Reservation.*")
+            ->from("Reservation")
+            ->where("Reservation.apartment_code = '$unitCode'")
+            ->getQuery()
+            ->execute();
+
+        $result = "";
+        foreach ($reservations as $reservation) {
+            if ($reservationCode != $reservation->getReservationCode())
+            {
+                $startDate = $reservation->getStartDate();
+                $endDate = $reservation->getEndDate();
+                if (($checkin<$startDate && $checkout<=$startDate) || ($checkin>=$endDate && $checkout>$endDate))
+                {
+                    $result = true;
+                } else {
+                    $result = false;
+                    break;
+                }
+            }
+        }
+        return $result;
     }
 
     public function calculatePrice($startDate, $endDate, $code, $people)
@@ -247,6 +296,18 @@ class Reservation extends \Phalcon\Mvc\Model
             }
         }
         return $price;
+    }
+
+    public function findByUser($code)
+    {
+        $reservations = $this->getmodelsManager()->createBuilder()
+            ->columns(array("Reservation.*, Apartment.code"))
+            ->from("Reservation")
+            ->join("Apartment", "Reservation.apartment_code = Apartment.code AND Reservation.customer_code = '$code'")
+            ->getQuery()
+            ->execute();
+
+        return $reservations;
     }
 
     public function testNew()

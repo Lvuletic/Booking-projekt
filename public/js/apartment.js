@@ -27,18 +27,39 @@ function checkDates()
     var checkin = $("#checkin").val();
     var checkout = $("#checkout").val();
     var code = apartmentInfo.getAttribute("data-apartmentCode");
+    var url = $(location).attr('href');
+    var segments = url.split('/');
+    var language = segments[4];
+    console.log(segments);
     //console.log(realCode);
     $.ajax({
         url: "/booking/reservation/checkDate",
         type: "post",
-        data: {"startDate" : checkin, "endDate" : checkout, "code" : code},
+        data: {"startDate" : checkin, "endDate" : checkout, "code" : code, "language" : language},
+        success: function(response) {
+            //console.log(response);
+            $("#dateCheck").html(response);
+        }
+    });
+}
+
+function checkEditDates(reservationCode)
+{
+    var checkin = $("#checkin").val();
+    var checkout = $("#checkout").val();
+    var code = apartmentInfo.getAttribute("data-apartmentCode");
+    var url = $(location).attr('href');
+    var segments = url.split('/');
+    var language = segments[4];
+    //console.log(segments);
+    //console.log(realCode);
+    $.ajax({
+        url: "/booking/reservation/checkEditDate",
+        type: "post",
+        data: {"startDate" : checkin, "endDate" : checkout, "code" : code, "language" : language, "reservationCode" : reservationCode},
         success: function(response) {
             console.log(response);
-            if (response == true)
-            {
-                $("#dateCheck").html("Selected date range is available for reservation");
-            } else  $("#dateCheck").html("Selected date range is not available for reservation");
-
+            $("#dateCheck").html(response);
         }
     });
 }
@@ -49,13 +70,17 @@ function priceCheck()
     var checkout = $("#checkout").val();
     var code = apartmentInfo.getAttribute("data-apartmentCode");
     var people = $("#people").val();
+    var url = $(location).attr('href');
+    var segments = url.split('/');
+    var language = segments[4];
+    //console.log(segments);
     $.ajax({
         url: "/booking/reservation/checkPrice",
         type: "post",
-        data: {"startDate" : checkin, "endDate" : checkout, "code" : code, "people": people},
+        data: {"startDate" : checkin, "endDate" : checkout, "code" : code, "people": people, "language" : language},
         success: function(response) {
-            console.log(response);
-            $("#priceCheck").html("Total price is:" + response);
+            //console.log(response);
+            $("#priceCheck").html(response);
         }
     })
 }
@@ -64,17 +89,12 @@ function validateForm()
 {
     var checkin = $("#checkin").val();
     var checkout = $("#checkout").val();
-    var people = $("#people").val();
     if (checkin == null || checkin == "") {
         alert("Check-in date must be entered");
         return false;
     }
     if (checkout == null || checkout == "") {
         alert("Check-out date must be entered");
-        return false;
-    }
-    if (people == null || people == "") {
-        alert("Number of guests must be entered");
         return false;
     }
 }

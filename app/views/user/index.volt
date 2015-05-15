@@ -25,7 +25,7 @@
 {{ submit_button("value": "Register", "class": "btn btn-default") }}
 </div>
 
-{{ end_form() }}
+{{ endform() }}
 
 
 

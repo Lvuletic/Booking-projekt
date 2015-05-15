@@ -16,7 +16,7 @@
 {% endfor %}
 <br>
 
-{{ form("Admin/createApartment/", "class": "form-inline", "role": "form") }}
+{{ form("admin/createApartment/", "class": "form-inline", "role": "form") }}
  <div class="row">
         <div class="form-group">
         {{ form.label("number") }}
@@ -32,7 +32,7 @@
         </div>
         <div class="form-group">
         {{ form.label("category") }}
-        {{ form.render("category", ["class": "form-control", "placeholder": "Category"]) }}
+        {{ selectStatic('category', ["A1": "A1", "A2": "A2", "A3": "A3", "A4": "A4", "A5": "A5", "S1": "S1", "S2": "S2", "S3": "S3"]) }}
         </div>
         <div class="form-group">
         {{ form.label("bedrooms") }}

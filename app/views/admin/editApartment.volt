@@ -1,5 +1,5 @@
 {{ content() }}
-{{ form("Admin/saveUnit/"~apartmentCode, "class": "form-horizontal", "role": "form") }}
+{{ form("admin/saveUnit/"~apartmentCode, "class": "form-horizontal", "role": "form") }}
 <div class="row">
     <div class="col-md-1">
         Apartment {{ apartmentCode }}
@@ -58,7 +58,7 @@
 </div>
 {{ endform() }}
 
-{{ form("Admin/savePrice/"~apartmentCode, "class": "form-horizontal", "role": "form") }}
+{{ form("admin/savePrice/"~apartmentCode, "class": "form-horizontal", "role": "form") }}
 {% for row in prices %}
 <div class="row">
 <div class="col-md-1">
@@ -84,7 +84,7 @@
          </div>
 {{ endform() }}
 
-{{ form("Admin/addImage/"~apartmentCode, "class": "form-inline", "enctype": "multipart/form-data", "role": "form") }}
+{{ form("admin/addImage/"~apartmentCode, "class": "form-inline", "enctype": "multipart/form-data", "role": "form") }}
 <div class="row">
 <div class="form-group">
 {{ formImage.label("image", ["class": "col-sm-3"]) }}

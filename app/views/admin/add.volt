@@ -1,5 +1,5 @@
 {{ content() }}
-{{ form("Admin/saveSpecification/"~apartment.getCode(), "class": "form-inline", "role": "form") }}
+{{ form("admin/saveSpecification/"~apartment.getCode(), "class": "form-inline", "role": "form") }}
 <div class="row">
     <div class="col-md-1">
           Add a new specification for apartment {{ apartment.getCode() }}
