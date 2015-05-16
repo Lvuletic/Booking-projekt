@@ -262,20 +262,49 @@ class AdminController extends ControllerBase
 
     public function createSeasonAction()
     {
-        $season = new Season();
-        $season->setName($this->request->getPost("name"));
-        $season->setStartDate($this->request->getPost("start_date"));
-        $season->setEndDate($this->request->getPost("end_date"));
-        if ($season->save()==false)
-        {
-            foreach ($season->getMessages() as $message)
+        try {
+            $manager = new Phalcon\Mvc\Model\Transaction\Manager;
+            $transaction = $manager->get();
+            $season = new Season();
+            $season->setTransaction($transaction);
+            $season->setName($this->request->getPost("name"));
+            $startDate = $this->request->getPost("start_date");
+            $endDate = $this->request->getPost("end_date");
+            $season->setStartDate($startDate);
+            $season->setEndDate($endDate);
+            if ($season->checkDates($startDate, $endDate) == true)
             {
-                echo $message;
+                if ($season->save()==false)
+                {
+                    $transaction->rollback();
+                } else {
+                    $transaction->commit();
+                    $transaction->begin();
+                }
+                $apartments = Apartment::find();
+                foreach ($apartments as $unit)
+                {
+                    $priceList = new Pricelist();
+                    $priceList->setTransaction($transaction);
+                    $priceList = $priceList->createNew($unit->getCode(), $season->getCode(), 0, 0);
+                    if ($priceList->save()==false)
+                    {
+                        $transaction->rollback();
+                    }
+                }
+                $transaction->commit();
+                $this->flash->success("New season added");
+                return $this->dispatcher->forward(array("controller" => "admin", "action" => "season"));
+            } else {
+                $this->flash->notice("Season dates overlap, please choose different dates");
+                return $this->dispatcher->forward(array("controller" => "admin", "action" => "season"));
             }
-        } else {
-            $this->flash->success("New season added");
-            return $this->dispatcher->forward(array("controller" => "admin", "action" => "season"));
-        };
+
+        } catch(Phalcon\Mvc\Model\Transaction\Failed $e)
+        {
+            echo 'Failed, reason: ', $e->getMessage();
+        }
+
     }
 
     public function saveSpecificationAction($code)
@@ -307,17 +336,34 @@ class AdminController extends ControllerBase
 
     public function deleteSeasonAction($code)
     {
-        $season = Season::findFirst($code);
-        if ($season->delete()==false)
-        {
-            foreach($season->getMessages() as $message)
+        try {
+            $manager = new Phalcon\Mvc\Model\Transaction\Manager;
+            $transaction = $manager->get();
+            $season = Season::findFirst($code);
+            $season->setTransaction($transaction);
+            $code = $season->getCode();
+            $prices = Pricelist::find("season_code = '$code'");
+            foreach ($prices as $pricelist)
             {
-                echo $message;
+                $pricelist->setTransaction($transaction);
+                if ($pricelist->delete()==false)
+                {
+                    $transaction->rollback();
+                }
             }
-        } else {
+            if ($season->delete()==false)
+            {
+                $transaction->rollback();
+            }
+            $transaction->commit();
             $this->flash->success("Season successfully deleted");
             return $this->dispatcher->forward(array("controller" => "admin", "action" => "season"));
+
+        } catch(Phalcon\Mvc\Model\Transaction\Failed $e)
+        {
+            echo 'Failed, reason: ', $e->getMessage();
         }
+
     }
 
     public function removeSpecificationAction($code)
@@ -478,8 +524,19 @@ class AdminController extends ControllerBase
             $picNumber++;
             foreach ($image as $item)
             {
-                $destination = "img/".$code;
-                $item->moveTo($destination."/picture".$picNumber.".jpg");
+                $ext = pathinfo($item->getName(), PATHINFO_EXTENSION);
+                if ($ext=="jpg" || $ext=="gif" || $ext=="png")
+                {
+                    if ($item->getSize()>1000000)
+                    {
+                        $this->flash->notice("Uploaded file is larger than 1MB, cannot save");
+                    } else {
+                        $destination = "img/".$code;
+                        $item->moveTo($destination."/picture".$picNumber.".jpg");
+                    }
+                } else {
+                    $this->flash->notice("Uploaded file is in the wrong format");
+                }
             }
             return $this->dispatcher->forward(array("controller" => "admin", "action" => "editApartment"));
         }
@@ -492,10 +549,24 @@ class AdminController extends ControllerBase
             $image = $this->request->getUploadedFiles();
             $language = Language::findFirst($code);
             $name = $language->getName();
+
             foreach ($image as $item)
             {
-                $destination = "img/flags";
-                $item->moveTo($destination."/".$name.".gif");
+                $ext = pathinfo($item->getName(), PATHINFO_EXTENSION);
+                if ($ext=="jpg" || $ext=="gif" || $ext=="png")
+                {
+                    if ($item->getSize()>1000000)
+                    {
+                        $this->flash->notice("Uploaded file is larger than 1MB, cannot save");
+                    } else {
+                        $destination = "img/flags";
+                        $item->moveTo($destination."/".$name.".gif");
+                    }
+                } else {
+                    $this->flash->notice("Uploaded file is in the wrong format");
+                }
+
+
             }
             return $this->dispatcher->forward(array("controller" => "admin", "action" => "language"));
         }

@@ -116,4 +116,28 @@ class Season extends \Phalcon\Mvc\Model
         );
     }
 
+    public function checkDates($seasonStart, $seasonEnd)
+    {
+        $seasons = $this->getmodelsManager()->createBuilder()
+            ->columns("Season.*")
+            ->from("Season")
+            ->orderBy("Season.code")
+            ->getQuery()
+            ->execute();
+
+        $result = "";
+        foreach ($seasons as $season) {
+            $startDate = $season->getStartDate();
+            $endDate = $season->getEndDate();
+            if (($seasonStart<$startDate && $seasonEnd<$startDate) || ($seasonStart>$endDate && $seasonEnd>$endDate))
+            {
+                $result = true;
+            } else {
+                $result = false;
+                break;
+            }
+        }
+        return $result;
+    }
+
 }

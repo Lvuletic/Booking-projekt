@@ -46,7 +46,7 @@
 
 {% for item in list %}
 <div class="col-md-8">
-  <img src="/booking/public/img/{{ item.getCode() }}/picture1.jpg" height="600" width="750">
+  <img src="/img/{{ item.getCode() }}/picture1.jpg" height="600" width="750">
 </div>
 
 <div class="col-md-4">
@@ -71,4 +71,3 @@
 </div>
 
 {% endfor %}
-

@@ -127,7 +127,6 @@ Nullam felis risus, tincidunt in posuere fringilla, auctor eget ipsum.
 <button type="button" class="btn btn-primary" onclick="priceCheck()"><?php echo $t->_("checkPrice") ?></button>
 <div id="priceCheck"></div>
 </div>
-{{ flashSession.output() }}
 </div>
 
 

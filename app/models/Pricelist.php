@@ -132,6 +132,16 @@ class Pricelist extends \Phalcon\Mvc\Model
         );
     }
 
+    public function createNew($unitCode, $seasonCode, $priceOne, $priceRoom)
+    {
+        $priceList = new Pricelist();
+        $priceList->setApartmentCode($unitCode);
+        $priceList->setSeasonCode($seasonCode);
+        $priceList->setPricePerson($priceOne);
+        $priceList->setPriceRoom($priceRoom);
+        return $priceList;
+    }
+
     public function pricesBySeason($code)
     {
         $items = $this->getmodelsManager()->createBuilder()

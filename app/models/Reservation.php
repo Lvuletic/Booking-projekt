@@ -216,7 +216,7 @@ class Reservation extends \Phalcon\Mvc\Model
         return $reservation;
     }
 
-    public function checkDates($code, $checkin, $checkout)
+    public function checkDates($code, $checkin, $checkout, $reservationCode=null)
     {
         $reservations = $this->getmodelsManager()->createBuilder()
             ->columns("Reservation.*")
@@ -227,32 +227,21 @@ class Reservation extends \Phalcon\Mvc\Model
 
         $result = "";
         foreach ($reservations as $reservation) {
-            $startDate = $reservation->getStartDate();
-            $endDate = $reservation->getEndDate();
-            if (($checkin<$startDate && $checkout<=$startDate) || ($checkin>=$endDate && $checkout>$endDate))
+            if ($reservationCode!=null)
             {
-                $result = true;
+                if ($reservationCode != $reservation->getReservationCode())
+                {
+                    $startDate = $reservation->getStartDate();
+                    $endDate = $reservation->getEndDate();
+                    if (($checkin<$startDate && $checkout<=$startDate) || ($checkin>=$endDate && $checkout>$endDate))
+                    {
+                        $result = true;
+                    } else {
+                        $result = false;
+                        break;
+                    }
+                }
             } else {
-                $result = false;
-                break;
-            }
-        }
-        return $result;
-    }
-
-    public function checkEditDates($unitCode, $checkin, $checkout, $reservationCode)
-    {
-        $reservations = $this->getmodelsManager()->createBuilder()
-            ->columns("Reservation.*")
-            ->from("Reservation")
-            ->where("Reservation.apartment_code = '$unitCode'")
-            ->getQuery()
-            ->execute();
-
-        $result = "";
-        foreach ($reservations as $reservation) {
-            if ($reservationCode != $reservation->getReservationCode())
-            {
                 $startDate = $reservation->getStartDate();
                 $endDate = $reservation->getEndDate();
                 if (($checkin<$startDate && $checkout<=$startDate) || ($checkin>=$endDate && $checkout>$endDate))

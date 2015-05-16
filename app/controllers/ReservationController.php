@@ -22,6 +22,7 @@ class ReservationController extends ControllerBase
             $checkin = $this->request->getPost("checkin");
             $checkout = $this->request->getPost("checkout");
             $people++;
+            $lang = $this->dispatcher->getParam("language");
             $reservation = new Reservation();
             $availability = Reservation::find("apartment_code = '$code'");
             if ($availability->count()>0)
@@ -35,15 +36,15 @@ class ReservationController extends ControllerBase
                     {
                         foreach ($reservation->getMessages() as $message) {
                             $this->flash->notice($message);
-                            return $this->dispatcher->forward(array("controller" => "apartment", "action" => "index", "param" => $code));
+                            return $this->response->redirect($lang."/apartment/index/".$code);
                         }
                     } else {
                         $this->flash->success($this->translate->_("reservationSuccess"));
-                        return $this->dispatcher->forward(array("controller" => "apartment", "action" => "index", "param" => $code));
+                        return $this->response->redirect($lang."/apartment/index/".$code);
                     }
                 } else {
                     $this->flash->error($this->translate->_("reservationFail"));
-                    return $this->dispatcher->forward(array("controller" => "apartment", "action" => "index", "param" => $code));
+                    return $this->response->redirect($lang."/apartment/index/".$code);
                 }
             } else {
                 $totalPrice = $reservation->calculatePrice($checkin, $checkout, $code, $people);
@@ -52,11 +53,11 @@ class ReservationController extends ControllerBase
                 {
                     foreach ($reservation->getMessages() as $message) {
                         $this->flash->notice($message);
-                        return $this->dispatcher->forward(array("controller" => "apartment", "action" => "index", "param" => $code));
+                        return $this->response->redirect($lang."/apartment/index/".$code);
                     }
                 } else {
                     $this->flash->success("Reservation successful");
-                    return $this->dispatcher->forward(array("controller" => "apartment", "action" => "index", "param" => $code));
+                    return $this->response->redirect($lang."/apartment/index/".$code);
                 }
             }
         }
@@ -99,7 +100,7 @@ class ReservationController extends ControllerBase
             $language = $this->request->getPost("language");
             $reservationCode = $this->request->getPost("reservationCode");
             $this->dispatcher->setParam("language", $language);
-            $availability = $reservation->checkEditDates($code, $checkin, $checkout, $reservationCode);
+            $availability = $reservation->checkDates($code, $checkin, $checkout, $reservationCode);
             $yes = $this->translate->_("checkDateTrue");
             $no = $this->translate->_("checkDateFalse");
             if ($availability == true)

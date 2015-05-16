@@ -54,7 +54,7 @@ function checkEditDates(reservationCode)
     //console.log(segments);
     //console.log(realCode);
     $.ajax({
-        url: "/booking/reservation/checkEditDate",
+        url: "/booking/reservation/checkDate",
         type: "post",
         data: {"startDate" : checkin, "endDate" : checkout, "code" : code, "language" : language, "reservationCode" : reservationCode},
         success: function(response) {
