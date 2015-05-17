@@ -35,7 +35,7 @@
 <br>
 
 {{ form("admin/createSeason/", "class": "form-inline", "role": "form") }}
-    <div class="seasonDates">
+
         <div class="form-group">
         {{ form.label("name") }}
         {{ form.render("name", ["class": "form-control", "id": "name", "placeholder": "Season name"]) }}
@@ -51,6 +51,6 @@
         <div class="form-group">
         {{ submit_button("value": "Add new season", "class": "btn btn-default") }}
         </div>
-    </div>
+
 
 {{ endform() }}

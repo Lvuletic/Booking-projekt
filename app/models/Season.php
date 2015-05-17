@@ -116,7 +116,7 @@ class Season extends \Phalcon\Mvc\Model
         );
     }
 
-    public function checkDates($seasonStart, $seasonEnd)
+    public function checkDates($seasonStart, $seasonEnd, $seasonCode = null)
     {
         $seasons = $this->getmodelsManager()->createBuilder()
             ->columns("Season.*")
@@ -126,15 +126,33 @@ class Season extends \Phalcon\Mvc\Model
             ->execute();
 
         $result = "";
-        foreach ($seasons as $season) {
-            $startDate = $season->getStartDate();
-            $endDate = $season->getEndDate();
-            if (($seasonStart<$startDate && $seasonEnd<$startDate) || ($seasonStart>$endDate && $seasonEnd>$endDate))
+
+        foreach ($seasons as $season)
+        {
+            if ($seasonCode == null)
             {
-                $result = true;
+                $startDate = $season->getStartDate();
+                $endDate = $season->getEndDate();
+                if (($seasonStart<$startDate && $seasonEnd<$startDate) || ($seasonStart>$endDate && $seasonEnd>$endDate))
+                {
+                    $result = true;
+                } else {
+                    $result = false;
+                    break;
+                }
             } else {
-                $result = false;
-                break;
+                if ($seasonCode != $season->getCode())
+                {
+                    $startDate = $season->getStartDate();
+                    $endDate = $season->getEndDate();
+                    if (($seasonStart<$startDate && $seasonEnd<$startDate) || ($seasonStart>$endDate && $seasonEnd>$endDate))
+                    {
+                        $result = true;
+                    } else {
+                        $result = false;
+                        break;
+                    }
+                }
             }
         }
         return $result;

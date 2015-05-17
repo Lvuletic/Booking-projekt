@@ -40,6 +40,7 @@ class ApartmentController extends ControllerBase
         $unitSpec = new UnitSpecification();
         $allSpecs = $unitSpec->findSpecification();
         $this->view->specifications = $allSpecs;
+        $this->view->emailForm = new EmailForm();
 
     }
 
@@ -80,15 +81,8 @@ class ApartmentController extends ControllerBase
                             $value = $this->request->getPost($type->specification->getCode());
                             if (($value == "on") && ($type->unitSpecification->getSpecificationCode() == $type->specification->getCode()))
                             {
-                                $items[$unit->getCode()]["code"] = $unit->getCode();
-                                $items[$unit->getCode()]["size"] = $unit->getSize();
-                                $items[$unit->getCode()]["rating"] = $unit->getRating();
-                                $items[$unit->getCode()]["category"] = $unit->getCategory();
-                                $items[$unit->getCode()]["bedrooms"] = $unit->getBedroomNumber();
-                                $items[$unit->getCode()]["bathrooms"] = $unit->getBathroomNumber();
-
+                                $items[$unit->getCode()] = $unit;
                             }
-
                         }
                     }
                 }
@@ -133,6 +127,26 @@ class ApartmentController extends ControllerBase
                 $specCode = $spec->getCode();
                 $this->forms->set("formFilter" . $specCode, new FilterSpecificationForm($spec));
             }
+        }
+    }
+
+    public function emailAction($code)
+    {
+        if ($this->request->isPost()==true)
+        {
+            $id = $this->session->get("user_id");
+            $user = User::findFirst($id);
+            $email_from = $user->getEmail();
+            $headers = 'From: '.$email_from."\r\n".'Reply-To: '.$email_from."\r\n";
+            $subject = $this->request->getPost("subject");
+            $message = $this->request->getPost("textarea");
+            if (mail("luka.vuleti@gmail.com", $subject, $message, $headers))
+            {
+                $this->flash->notice($this->translate->_("mailSuccess"));
+            }
+            $lang = $this->dispatcher->getParam("language");
+            return $this->response->redirect($lang."/apartment/".$code);
+
         }
     }
 }

@@ -23,7 +23,7 @@ New number of guests
 {{ submit_button("value": t._("bookThis"), "class": "btn btn-primary") }}
 {{ endform() }}
 <button type="button" class="btn btn-primary" onclick="priceCheck()"><?php echo $t->_("checkPrice") ?></button>
-<button type="button" class="btn btn-primary" onclick="checkDates( {{ reservation.getReservationCode() }} )"><?php echo $t->_("checkDates") ?></button>
+<button type="button" class="btn btn-primary" onclick="checkEditDates( {{ reservation.getReservationCode() }} )"><?php echo $t->_("checkDates") ?></button>
 <div id="priceCheck"></div>
 </div>
 <div id="dateCheck">

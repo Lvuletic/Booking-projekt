@@ -33,7 +33,8 @@ class Security extends Plugin
 
         $privateResources = array(
             "reservation" => array("index", "delete", "edit", "checkEditDate"),
-            "user" => array("account", "save", "reservations", "editBooking")
+            "user" => array("account", "save", "reservations", "editBooking"),
+            "apartment" => array("email")
         );
 
         foreach ($privateResources as $resource => $actions) {
@@ -68,7 +69,7 @@ class Security extends Plugin
         }
 
         $adminActions = array("index", "season", "apartment", "specification", "editApartment", "language", "editLanguage", "add", "saveSeason", "saveUnit", "savePrice",
-            "createSpecification", "createSeason", "saveSpecification", "deleteSeason", "removeSpecification", "createApartment", "changeLanguage", "createLanguage", "deleteLanguage", "addImage", "saveLangImage");
+            "createSpecification", "createSeason", "saveSpecification", "deleteSeason", "removeSpecification", "createApartment", "changeLanguage", "createLanguage", "deleteLanguage", "addImage", "saveLangImage", "deleteApartment");
         $adminResource = new Resource("admin");
         $acl->addResource($adminResource, $adminActions);
         foreach ($adminActions as $action)

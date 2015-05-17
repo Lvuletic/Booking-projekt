@@ -46,7 +46,7 @@
         <div class="col-sm-6">
         {{ forms.get("formSpec"~spec.specification.getCode()).render("value"~spec.specification.getCode(), ["class": "form-control", "value": spec.unitSpecification.getValue(), "placeholder": "Value"]) }}
         </div>
-        <a class="btn btn-default" href="removeSpecification/{{ spec.unitSpecification.getCode() }}">Remove this specification</a>
+        <?php echo $this->tag->linkTo(array($this->dispatcher->getParam("language")."/admin/removeSpecification/".$spec->unitSpecification->getCode(), "Remove this specification", "class" => "btn btn-default")) ?>
         </div>
         {% endif %}
         {% endfor %}

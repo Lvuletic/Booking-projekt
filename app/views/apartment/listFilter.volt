@@ -11,7 +11,7 @@
         </div>
         <div class="form-group">
         {{ form.label("category") }}
-        {{ form.render("category", ["class": "form-control", "placeholder": "Category"]) }}
+        {{ selectStatic('category', ["Any": "Any", "A1": "A1", "A2": "A2", "A3": "A3", "A4": "A4", "A5": "A5", "S1": "S1", "S2": "S2", "S3": "S3"]) }}
         </div>
         <div class="form-group">
         {{ form.label("bedrooms") }}
@@ -45,34 +45,33 @@ echo $t->_("searchEmpty");
 <br>
 <br>
 
-<?php foreach ($list as $unit=>$key)
-{
-     ?>
+{% for item in list %}
+
 <div class="col-md-8">
-  <img src="/booking/public/img/{{ key["code"] }}/picture1.jpg" height="600" width="750">
+  <img src="/booking/public/img/{{ item.getCode() }}/picture1.jpg" height="600" width="750">
 </div>
 
 <div class="col-md-4">
 <h3> FEATURE LIST </h3>
 <p>
-<?php echo $t->_("unitNumber") ?>: {{ key["code"] }} <br>
-<?php echo $t->_("size") ?>: {{ key["size"]  }} <br>
-<?php echo $t->_("rating") ?>: {{ key["rating"]  }} <br>
-<?php echo $t->_("category") ?>: {{ key["category"]  }} <br>
-<?php echo $t->_("bedrooms") ?>: {{ key["bedrooms"]  }} <br>
-<?php echo $t->_("bathrooms") ?>: {{ key["bathrooms"]  }} <br>
+<?php echo $t->_("unitNumber") ?>: {{ item.getCode() }} <br>
+<?php echo $t->_("size") ?>: {{ item.getSize()  }} <br>
+<?php echo $t->_("rating") ?>: {{ item.getRating() }} <br>
+<?php echo $t->_("category") ?>: {{ item.getCategory()  }} <br>
+<?php echo $t->_("bedrooms") ?>: {{ item.getBedroomNumber()  }} <br>
+<?php echo $t->_("bathrooms") ?>: {{ item.getBathroomNumber() }} <br>
 
 {% for spec in specifications %}
-{% if spec.unitSpecification.getApartmentCode() == key["code"] %}
+{% if spec.unitSpecification.getApartmentCode() == item.getCode() %}
 <?php echo $t->_($spec->specification->getName()) ?> - {{ spec.unitSpecification.getValue() }} <br>
 {% endif %}
 {% endfor %}
 
-<a class="btn btn-primary" href="index/{{ key["code"] }}"><?php echo $t->_("bookThis") ?></a>
+<?php echo $this->tag->linkTo(array($this->dispatcher->getParam("language")."/apartment/index/".$item->getCode(), $t->_("bookThis"), "class" => "btn btn-primary")) ?>
 </p>
 </div>
-<?php
-} ?>
+
+{% endfor %}
 
 
 

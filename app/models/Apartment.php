@@ -185,7 +185,7 @@ class Apartment extends \Phalcon\Mvc\Model
 
     public function filter($size = 0, $rating = 0, $category, $bedrooms = 0, $bathrooms = 0)
     {
-        if ($category==null)
+        if ($category=="Any")
         {
             $items = $this->getmodelsManager()->createBuilder()
                 ->columns("Apartment.*")

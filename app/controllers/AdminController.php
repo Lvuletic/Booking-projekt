@@ -134,9 +134,21 @@ class AdminController extends ControllerBase
                 $name = $this->request->getPost("name".$code);
                 $startDate= $this->request->getPost("start_date".$code);
                 $endDate = $this->request->getPost("end_date".$code);
+                if ($endDate < $startDate)
+                {
+
+                    $this->flash->success("Dates are wrong");
+                    return $this->dispatcher->forward(array("controller" => "admin", "action" => "season"));
+                }
                 $season->setName($name);
                 $season->setStartDate($startDate);
                 $season->setEndDate($endDate);
+                $seasonCode = $season->getCode();
+                if ($season->checkDates($startDate, $endDate, $seasonCode)== false)
+                {
+                    $this->flash->success("Season dates overlap, please choose different dates");
+                    return $this->dispatcher->forward(array("controller" => "admin", "action" => "season"));
+                }
                 if ($season->save()==false)
                 {
                     $transaction->rollback();
@@ -449,6 +461,13 @@ class AdminController extends ControllerBase
     public function createLanguageAction()
     {
         try {
+            $form = new NewLanguageForm();
+            if (!$form->isValid($this->request->getPost())) {
+                foreach ($form->getMessages() as $message) {
+                    $this->flashSession->error($message);
+                }
+                return $this->response->redirect("admin/language");
+            }
             $manager = new Phalcon\Mvc\Model\Transaction\Manager;
             $transaction = $manager->get();
             $language = new Language();
@@ -568,8 +587,64 @@ class AdminController extends ControllerBase
 
 
             }
-            return $this->dispatcher->forward(array("controller" => "admin", "action" => "language"));
+            return $this->response->redirect("admin/language");
         }
 
     }
+
+    public function deleteApartmentAction($code)
+    {
+        try {
+            $manager = new Phalcon\Mvc\Model\Transaction\Manager;
+            $transaction = $manager->get();
+            $reservations = Reservation::find("apartment_code = '$code'");
+            if ($reservations->count()>0)
+            {
+                $this->flashSession->notice("Cannot delete an apartment because there are still reservations on it");
+                return $this->response->redirect("admin/apartment");
+            } else {
+                $prices = Pricelist::find("apartment_code = '$code'");
+                foreach ($prices as $price)
+                {
+                    $price->setTransaction($transaction);
+                    if ($price->delete()==false)
+                    {
+                        $transaction->rollback();
+                    }
+                }
+                $unitSpecs = UnitSpecification::find("apartment_code = '$code'");
+                foreach ($unitSpecs as $spec)
+                {
+                    $spec->setTransaction($transaction);
+                    if ($spec->delete()==false)
+                    {
+                        $transaction->rollback();
+                    }
+                }
+                $apartment = Apartment::findFirst($code);
+                $apartment->setTransaction($transaction);
+                if ($apartment->delete()==false)
+                {
+                    $transaction->rollback();
+                }
+                $path = "img/".$code."/";
+                $pictures = glob($path."*");
+                foreach ($pictures as $picture)
+                {
+                    unlink($picture);
+                }
+                rmdir($path);
+                $this->flashSession->notice("Delete successfull");
+                $transaction->commit();
+                return $this->response->redirect("admin/apartment");
+
+            }
+        } catch(Phalcon\Mvc\Model\Transaction\Failed $e)
+        {
+            echo 'Failed, reason: ', $e->getMessage();
+        }
+
+
+    }
+
 }

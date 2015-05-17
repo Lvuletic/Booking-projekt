@@ -145,7 +145,7 @@ class ReservationController extends ControllerBase
             $checkin = $this->request->getPost("checkin");
             $checkout = $this->request->getPost("checkout");
             $people++;
-            $freedate = $reservation->checkEditDates($apartment->getCode(), $checkin, $checkout, $reservation->getReservationCode());
+            $freedate = $reservation->checkDates($apartment->getCode(), $checkin, $checkout, $reservation->getReservationCode());
             if ($freedate == true)
             {
                 $totalPrice = $reservation->calculatePrice($checkin, $checkout, $apartment->getCode(), $people);

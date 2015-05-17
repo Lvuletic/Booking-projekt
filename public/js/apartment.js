@@ -52,7 +52,7 @@ function checkEditDates(reservationCode)
     var segments = url.split('/');
     var language = segments[4];
     //console.log(segments);
-    //console.log(realCode);
+    console.log(code);
     $.ajax({
         url: "/booking/reservation/checkDate",
         type: "post",
@@ -97,10 +97,4 @@ function validateForm()
         alert("Check-out date must be entered");
         return false;
     }
-}
-
-document.getElementById("internet").addEventListener("change", selectedProduct)
-
-function selectedProduct(){
-    console.log(this.value);
 }

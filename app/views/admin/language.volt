@@ -1,5 +1,6 @@
 
 {{ content() }}
+{{ flashSession.output() }}
 {% for item in languages %}
 {{ item.getFullname() }}
 <a class="btn btn-default" href="editLanguage/{{ item.getName() }}">Edit</a>
@@ -41,3 +42,4 @@
 </div>
 
 {{ endform() }}
+*/

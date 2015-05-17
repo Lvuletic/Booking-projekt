@@ -129,6 +129,8 @@ Nullam felis risus, tincidunt in posuere fringilla, auctor eget ipsum.
 </div>
 </div>
 
+{{ flashSession.output() }}
+
 
 <div class="col-md-4">
 <h3> PRICE LISTING </h3>
@@ -139,4 +141,18 @@ For period from {{ row.season.getStartDate() }} to {{ row.season.getEndDate() }}
 {% endfor %}
 </div>
 
-
+{{ form(this.dispatcher.getParam("language")~"/apartment/email/"~apartmentCode, "role": "form") }}
+<div class="col-md-6">
+<div class="form-group">
+{{ emailForm.label("subject") }}
+{{ emailForm.render("subject", ["class": "form-control", "placeholder": "Subject"]) }}
+</div>
+<div class="form-group">
+{{ emailForm.label("textarea") }}
+{{ emailForm.render("textarea", ["class": "form-control", "placeholder": "Check-out date"]) }}
+</div>
+<div class="form-group">
+{{ submit_button("value": "Send", "class": "btn btn-primary") }}
+{{ endform() }}
+</div>
+</div>

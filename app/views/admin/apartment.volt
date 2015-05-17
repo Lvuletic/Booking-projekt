@@ -1,4 +1,5 @@
 {{ content() }}
+{{ flashSession.output() }}
 {% for unit in apartments %}
 
 <div class="row">
@@ -9,7 +10,7 @@
         <img src="/booking/public/img/{{ unit.getCode() }}/picture1.jpg" width="350" height="300">
 
         <a class="btn btn-default" href="editApartment/{{ unit.getCode() }}">Edit apartment</a>
-
+        <a class="btn btn-default" href="deleteApartment/{{ unit.getCode() }}">Delete apartment</a>
     </div>
 </div>
 
